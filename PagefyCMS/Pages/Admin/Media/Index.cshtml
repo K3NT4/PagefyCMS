@@ -1,0 +1,28 @@
+﻿@page
+@model PagefyCMS.Pages.Admin.Media.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Mediabibliotek";
+}
+<h2>Mediabibliotek</h2>
+
+<a href="/admin/media/upload" class="btn btn-primary">Ladda upp ny bild</a>
+
+<hr />
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+@foreach (var item in Model.MediaList)
+{
+    <div style="border: 1px solid #ccc; padding: 5px; text-align: center;">
+        <img src="@item.WebpMedium" alt="@item.AltText" style="max-width: 150px;" />
+        <div>@item.Filename</div>
+        <div>
+            <a href="/admin/media/edit?id=@item.Id">Redigera</a> |
+            <form method="post" style="display: inline;">
+                <input type="hidden" name="DeleteId" value="@item.Id" />
+                <button type="submit" style="color: red;">Ta bort</button>
+            </form>
+        </div>
+    </div>
+}
+</div>

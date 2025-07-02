@@ -1,0 +1,83 @@
+﻿@inject IHttpContextAccessor ContextAccessor
+@inject PagefyCMS.Data.PagefyDbContext Context
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin - PagefyCMS</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .admin-navbar {
+            background-color: #343a40;
+        }
+        .admin-navbar .navbar-brand,
+        .admin-navbar .nav-link {
+            color: #fff;
+        }
+        .admin-navbar .nav-link:hover {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg admin-navbar">
+    <div class="container">
+        <a class="navbar-brand" asp-page="/Admin/Dashboard">
+            @(Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS") Admin
+        </a>
+
+        @if (ContextAccessor.HttpContext.Session.GetString("LoggedIn") == "true")
+        {
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Admin/Dashboard"><i class="bi bi-speedometer2"></i> Översikt</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Admin/Pages/Index"><i class="bi bi-file-earmark-text"></i> Sidor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Admin/Articles/Index"><i class="bi bi-newspaper"></i> Artiklar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Admin/Media/Index"><i class="bi bi-image"></i> Bilder</a>
+                    </li>
+
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Admin/Settings/Settings"><i class="bi bi-gear"></i> Inställningar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning" href="/Admin/Logout"><i class="bi bi-box-arrow-right"></i> Logga ut</a>
+                    </li>
+                </ul>
+            </div>
+        }
+    </div>
+</nav>
+
+<div class="container mt-4">
+    @RenderBody()
+</div>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+@RenderSection("Scripts", required: false)
+
+</body>
+</html>

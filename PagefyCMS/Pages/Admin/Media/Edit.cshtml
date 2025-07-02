@@ -1,0 +1,58 @@
+﻿@page
+@model PagefyCMS.Pages.Admin.Media.EditModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Redigera bild";
+}
+
+<h2>Redigera bild</h2>
+
+@if (Model.Media != null)
+{
+    <div>
+        <img src="@Model.Media.WebpMedium" alt="@Model.Media.AltText" style="max-width: 200px;" />
+        <br />
+        <input type="text" id="imageLink" class="form-control mt-2" readonly value="@Model.Media.WebpMedium" style="max-width: 400px;" />
+        <button type="button" class="btn btn-sm btn-outline-secondary mt-1" onclick="copyLink()">Kopiera bildlänk</button>
+    </div>
+
+    <form method="post" class="mt-4">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label>Namn (Titel på bilden):</label>
+            <input type="text" name="Title" value="@Model.Title" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Alt-text (SEO, tillgänglighet):</label>
+            <input type="text" name="AltText" value="@Model.AltText" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Beskrivning (valfri):</label>
+            <textarea name="Description" class="form-control">@Model.Description</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Spara ändringar</button>
+    </form>
+
+    <br />
+    <a href="/admin/media">Tillbaka till mediabiblioteket</a>
+}
+else
+{
+    <p>Bilden kunde inte hittas.</p>
+}
+
+@section Scripts {
+<script>
+    function copyLink() {
+        const linkInput = document.getElementById("imageLink");
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+        alert("Bildlänk kopierad!");
+    }
+</script>
+}

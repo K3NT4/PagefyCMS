@@ -1,0 +1,22 @@
+﻿@page
+@model PagefyCMS.Pages.IndexModel
+
+<h2>Senaste nyheterna</h2>
+
+@if (Model.Articles.Any())
+{
+    <ul>
+    @foreach (var news in Model.Articles)
+    {
+        <li>
+            <b>
+                <a href="/Article/@news.Slug">@news.Headline</a>
+            </b> - @news.PublishedAt.ToString("yyyy-MM-dd")
+        </li>
+    }
+    </ul>
+}
+else
+{
+    <p>Inga artiklar publicerade ännu.</p>
+}

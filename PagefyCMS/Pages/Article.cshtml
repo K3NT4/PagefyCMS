@@ -1,0 +1,13 @@
+﻿@page "{slug}"
+@model PagefyCMS.Pages.ArticleModel
+
+@if (Model.ArticleData != null)
+{
+    <h1>@Model.ArticleData.Headline</h1>
+    <p><i>@Model.ArticleData.PublishedAt.ToString("yyyy-MM-dd")</i></p>
+    <div>@(Model.ArticleData.Content)</div>
+}
+else
+{
+    <h2>Artikeln hittades inte.</h2>
+}

@@ -1,0 +1,57 @@
+﻿@page
+@inject PagefyCMS.Data.PagefyDbContext Context
+@model PagefyCMS.Pages.Admin.Pages.CreateModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Skapa ny sida";
+}
+
+<h2>Skapa ny sida</h2>
+
+<form method="post" class="mt-4">
+    <div class="mb-3">
+        <label asp-for="NewPage.Title" class="form-label">Titel</label>
+        <input asp-for="NewPage.Title" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewPage.Slug" class="form-label">Slug (URL-del)</label>
+        <input asp-for="NewPage.Slug" class="form-control" required />
+    </div>
+<div class="mb-3">
+    <label asp-for="NewPage.GalleryGroup" class="form-label">Galleri-grupp (valfritt)</label>
+    <input asp-for="NewPage.GalleryGroup" class="form-control" />
+</div>
+
+
+    <div class="mb-3">
+        <label asp-for="NewPage.Content" class="form-label">Innehåll</label>
+        <textarea asp-for="NewPage.Content" class="form-control" rows="8"></textarea>
+    </div>
+    <div class="form-check mb-3">
+    <input asp-for="NewPage.ShowInMenu" class="form-check-input" type="checkbox" />
+    <label asp-for="NewPage.ShowInMenu" class="form-check-label">Visa i meny</label>
+</div>
+
+    <button type="submit" class="btn btn-success">Publicera</button>
+    <a asp-page="./Index" class="btn btn-secondary ms-2">Avbryt</a>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const titleInput = document.querySelector('input[name="NewPage.Title"]');
+            const slugInput = document.querySelector('input[name="NewPage.Slug"]');
+
+            titleInput.addEventListener("input", function () {
+                let slug = titleInput.value.toLowerCase()
+                    .replace(/\s+/g, '-')          
+                    .replace(/[^a-z0-9\-]/g, '')    
+                    .replace(/\-+/g, '-')           
+                    .replace(/^-+|-+$/g, '');       
+
+                slugInput.value = slug;
+            });
+        });
+    </script>
+}

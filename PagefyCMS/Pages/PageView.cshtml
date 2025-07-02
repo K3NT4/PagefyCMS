@@ -1,0 +1,38 @@
+﻿@page "{slug}"
+@model PagefyCMS.Pages.PageViewModel
+@inject PagefyCMS.Data.PagefyDbContext Db
+
+@if (Model.PageData != null)
+{
+    <h1>@Model.PageData.Title</h1>
+    <div>@Html.Raw(Model.PageData.Content)</div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.PageData.GalleryGroup))
+{
+    <h2>Bilder</h2>
+
+    @* Hämta bilder direkt i koden, utan @{ } block *@
+    var gallery = Db.MediaLibrary
+        .Where(m => m.GalleryGroup == Model.PageData.GalleryGroup)
+        .ToList();
+
+    @if (gallery.Any())
+    {
+        <div class="row">
+            @foreach (var img in gallery)
+            {
+                <div class="col-md-3 mb-3">
+                    <a href="@img.WebpLarge" target="_blank">
+                        <img src="@img.WebpMedium" alt="@img.AltText" class="img-fluid border" />
+                    </a>
+                </div>
+            }
+        </div>
+    }
+}
+
+}
+else
+{
+    <h2>Sidan hittades inte.</h2>
+}

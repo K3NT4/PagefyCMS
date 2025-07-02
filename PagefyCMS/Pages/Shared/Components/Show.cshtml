@@ -1,0 +1,28 @@
+﻿@page "{slug}"
+@model PagefyCMS.Pages.ShowModel
+@inject PagefyCMS.Data.PagefyDbContext Db
+
+@if (Model.Page != null)
+{
+    <h1>@Model.Page.Title</h1>
+    <div>@Html.Raw(Model.Page.Content)</div>
+
+    @if (Model.GalleryImages.Any())
+    {
+        <h2>Bilder</h2>
+        <div class="row">
+            @foreach (var img in Model.GalleryImages)
+            {
+                <div class="col-md-3 mb-3">
+                    <a href="@img.WebpLarge" target="_blank">
+                        <img src="@img.WebpMedium" alt="@img.AltText" class="img-fluid border" />
+                    </a>
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <h2>Sidan hittades inte.</h2>
+}

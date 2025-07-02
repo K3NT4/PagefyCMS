@@ -1,0 +1,12 @@
+﻿@model IEnumerable<PagefyCMS.Models.MediaItem>
+
+<div class="row">
+@foreach (var img in Model)
+{
+    <div class="col-md-3 mb-3">
+        <a href="@img.WebpLarge" target="_blank">
+            <img src="@img.WebpMedium" alt="@img.AltText" class="img-fluid border" />
+        </a>
+    </div>
+}
+</div>

@@ -1,0 +1,72 @@
+﻿@page
+@model PagefyCMS.Pages.Admin.Media.UploadModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Ladda upp ny bild";
+}
+
+<h2>Ladda upp ny bild</h2>
+
+<form enctype="multipart/form-data" method="post">
+    <div id="dropzone" style="border: 2px dashed #aaa; padding: 30px; text-align: center; margin-bottom: 20px;">
+        <p>Dra och släpp en bild här, eller klicka för att välja fil</p>
+        <input type="file" id="fileInput" name="UploadFile" hidden />
+        <p id="fileName" class="text-muted"></p>
+    </div>
+
+    <div>
+        <label>Namn (Titel på bilden, valfritt):</label>
+        <input type="text" name="Title" value="@Model.Title" />
+    </div>
+
+    <div>
+        <label>Alt-text (Beskrivning för SEO och tillgänglighet, valfritt):</label>
+        <input type="text" name="AltText" value="@Model.AltText" />
+    </div>
+
+    <p class="text-muted">
+        Tips: Alt-texten syns för sökmotorer och personer med skärmläsare. Du kan fylla i den nu eller redigera senare.
+    </p>
+
+    <button type="submit" id="uploadBtn" disabled>Ladda upp</button>
+</form>
+
+<a href="/admin/media">Tillbaka till mediabiblioteket</a>
+
+@section Scripts {
+<script>
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+    const fileNameDisplay = document.getElementById("fileName");
+    const uploadBtn = document.getElementById("uploadBtn");
+
+    dropzone.addEventListener("click", () => fileInput.click());
+
+    dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.style.backgroundColor = "#f0f0f0";
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+        dropzone.style.backgroundColor = "";
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.style.backgroundColor = "";
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            fileNameDisplay.textContent = "Vald fil: " + files[0].name;
+            uploadBtn.disabled = false;
+        }
+    });
+
+    fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = "Vald fil: " + fileInput.files[0].name;
+            uploadBtn.disabled = false;
+        }
+    });
+</script>
+}

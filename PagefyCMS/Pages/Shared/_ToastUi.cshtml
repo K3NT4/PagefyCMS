@@ -1,0 +1,24 @@
+﻿<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+<div id="toastEditor" style="height: 400px;"></div>
+
+<script>
+    const editor = new toastui.Editor({
+        el: document.querySelector('#toastEditor'),
+        height: '400px',
+        initialEditType: 'wysiwyg',
+        previewStyle: 'vertical'
+    });
+
+    const hiddenField = document.getElementById('contentArea');
+    if (hiddenField.value) {
+        editor.setHTML(hiddenField.value);
+    }
+
+    document.querySelector("form").addEventListener("submit", () => {
+        hiddenField.value = editor.getHTML();
+    });
+
+    hiddenField.style.display = 'none';
+</script>

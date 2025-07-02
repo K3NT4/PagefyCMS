@@ -1,0 +1,12 @@
+﻿@page "/{slug}"
+@model PagefyCMS.Pages.ViewPage.SlugModel
+
+@if (Model.PageData != null)
+{
+    <h1>@Model.PageData.Title</h1>
+    <div>@(Model.PageData.Content)</div>
+}
+else
+{
+    <h2>Sidan hittades inte.</h2>
+}

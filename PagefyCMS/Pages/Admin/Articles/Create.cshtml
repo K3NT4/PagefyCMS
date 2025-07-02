@@ -1,0 +1,58 @@
+﻿@page
+@inject PagefyCMS.Data.PagefyDbContext Context
+@model PagefyCMS.Pages.Admin.Articles.CreateModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Skapa ny artikel";
+    var editorType = Context.Settings.FirstOrDefault(s => s.Key == "EditorType")?.Value ?? "tinymce";
+}
+
+<h2>Skapa ny artikel</h2>
+
+<form method="post" class="mt-4">
+    <div class="mb-3">
+        <label asp-for="NewArticle.Headline" class="form-label">Rubrik</label>
+        <input asp-for="NewArticle.Headline" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewArticle.Slug" class="form-label">Slug (URL-del)</label>
+        <input asp-for="NewArticle.Slug" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewArticle.Content" class="form-label">Innehåll</label>
+        <textarea asp-for="NewArticle.Content" id="contentArea" class="form-control" rows="8"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Publicera</button>
+    <a asp-page="./Index" class="btn btn-secondary ms-2">Avbryt</a>
+</form>
+
+@section Scripts {
+    @if (editorType == "tinymce")
+    {
+        @await Html.PartialAsync("_TinyMce")
+    }
+    else if (editorType == "toastui")
+    {
+        @await Html.PartialAsync("_ToastUi")
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const headlineInput = document.querySelector('input[name="NewArticle.Headline"]');
+            const slugInput = document.querySelector('input[name="NewArticle.Slug"]');
+
+            headlineInput.addEventListener("input", function () {
+                let slug = headlineInput.value.toLowerCase()
+                    .replace(/\s+/g, '-')          
+                    .replace(/[^a-z0-9\-]/g, '')    
+                    .replace(/\-+/g, '-')           
+                    .replace(/^-+|-+$/g, '');       
+
+                slugInput.value = slug;
+            });
+        });
+    </script>
+}

@@ -1,0 +1,35 @@
+﻿@page
+@model PagefyCMS.Pages.Admin.Settings.SettingsModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Inställningar";
+}
+
+<h2>Sidinställningar</h2>
+
+@if (Model.Saved)
+{
+    <div class="alert alert-success">Inställningarna sparades!</div>
+}
+
+<form method="post">
+    <div class="mb-3">
+        <label for="siteTitle" class="form-label">Sidans namn</label>
+        <input type="text" id="siteTitle" name="SiteTitle" value="@Model.SiteTitle" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="editorType" class="form-label">Val av editor</label>
+        <select id="editorType" name="EditorType" class="form-select">
+<option value="tinymce" selected="@(Model.EditorType == "tinymce" ? "selected" : null)">TinyMCE</option>
+<option value="toastui" selected="@(Model.EditorType == "toastui" ? "selected" : null)">Toast UI Editor</option>
+        </select>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="editorEnabled" name="EditorEnabled" value="true" @(Model.EditorEnabled ? "checked" : "") />
+        <label class="form-check-label" for="editorEnabled">Aktivera editor på sidor och artiklar</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Spara ändringar</button>
+</form>
