@@ -1,0 +1,34 @@
+﻿<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+<div id="toastEditor" style="height: 400px;"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const editor = new toastui.Editor({
+            el: document.querySelector('#toastEditor'),
+            height: '400px',
+            initialEditType: 'wysiwyg',  // Kan även vara 'markdown' om du vill
+            previewStyle: 'vertical'
+        });
+
+        const hiddenField = document.getElementById('contentArea');
+
+        // Om det redan finns innehåll, fyll editorn
+        if (hiddenField.value) {
+            editor.setHTML(hiddenField.value);
+        }
+
+        // Uppdatera textarea vid form-submit
+        const form = hiddenField.closest("form");
+        if (form) {
+            form.addEventListener("submit", () => {
+                hiddenField.value = editor.getHTML();
+            });
+        }
+
+        // Dölj den vanliga textarea-rutan
+        hiddenField.style.display = 'none';
+    });
+</script>

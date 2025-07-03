@@ -4,7 +4,7 @@
 @if (Model.PageData != null)
 {
     <h1>@Model.PageData.Title</h1>
-    <div>@(Model.PageData.Content)</div>
+    <div>@Html.Raw(Model.PageData.Content)</div>
 }
 else
 {

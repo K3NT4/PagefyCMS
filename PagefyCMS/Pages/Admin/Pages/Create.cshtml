@@ -22,12 +22,13 @@
     <label asp-for="NewPage.GalleryGroup" class="form-label">Galleri-grupp (valfritt)</label>
     <input asp-for="NewPage.GalleryGroup" class="form-control" />
 </div>
+@await Component.InvokeAsync("EditorSelector")
 
+<div class="mb-3">
+    <label asp-for="NewPage.Content" class="form-label">Innehåll</label>
+    <textarea asp-for="NewPage.Content" class="form-control" rows="8" id="contentArea"></textarea>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="NewPage.Content" class="form-label">Innehåll</label>
-        <textarea asp-for="NewPage.Content" class="form-control" rows="8"></textarea>
-    </div>
     <div class="form-check mb-3">
     <input asp-for="NewPage.ShowInMenu" class="form-check-input" type="checkbox" />
     <label asp-for="NewPage.ShowInMenu" class="form-check-label">Visa i meny</label>
@@ -38,20 +39,6 @@
 </form>
 
 @section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const titleInput = document.querySelector('input[name="NewPage.Title"]');
-            const slugInput = document.querySelector('input[name="NewPage.Slug"]');
-
-            titleInput.addEventListener("input", function () {
-                let slug = titleInput.value.toLowerCase()
-                    .replace(/\s+/g, '-')          
-                    .replace(/[^a-z0-9\-]/g, '')    
-                    .replace(/\-+/g, '-')           
-                    .replace(/^-+|-+$/g, '');       
-
-                slugInput.value = slug;
-            });
-        });
-    </script>
+    <script src="/js/gallery-helper.js"></script>
 }
+

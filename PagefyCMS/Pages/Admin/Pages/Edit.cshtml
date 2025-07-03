@@ -20,19 +20,22 @@
         <label asp-for="EditPage.Slug" class="form-label">Slug</label>
         <input asp-for="EditPage.Slug" class="form-control" required />
     </div>
-<div class="mb-3">
-    <label asp-for="EditPage.GalleryGroup" class="form-label">Galleri-grupp (valfritt)</label>
-    <input asp-for="EditPage.GalleryGroup" class="form-control" />
-</div>
 
-</div>
+    <div class="mb-3">
+        <label asp-for="EditPage.GalleryGroup" class="form-label">Galleri-grupp (valfritt)</label>
+        <input asp-for="EditPage.GalleryGroup" class="form-control" />
+    </div>
+
     <div class="form-check mb-3">
-    <input asp-for="EditPage.ShowInMenu" class="form-check-input" type="checkbox" />
-    <label asp-for="EditPage.ShowInMenu" class="form-check-label">Visa i meny</label>
-</div>
+        <input asp-for="EditPage.ShowInMenu" class="form-check-input" type="checkbox" />
+        <label asp-for="EditPage.ShowInMenu" class="form-check-label">Visa i meny</label>
+    </div>
+
+    @await Component.InvokeAsync("EditorSelector")
+
     <div class="mb-3">
         <label asp-for="EditPage.Content" class="form-label">Innehåll</label>
-        <textarea asp-for="EditPage.Content" class="form-control" rows="8"></textarea>
+        <textarea asp-for="EditPage.Content" class="form-control" rows="8" id="contentArea"></textarea>
     </div>
 
     <button type="submit" class="btn btn-primary">Spara ändringar</button>
@@ -40,20 +43,5 @@
 </form>
 
 @section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const titleInput = document.querySelector('input[name="EditPage.Title"]');
-            const slugInput = document.querySelector('input[name="EditPage.Slug"]');
-
-            titleInput.addEventListener("input", function () {
-                let slug = titleInput.value.toLowerCase()
-                    .replace(/\s+/g, '-')          
-                    .replace(/[^a-z0-9\-]/g, '')    
-                    .replace(/\-+/g, '-')           
-                    .replace(/^-+|-+$/g, '');       
-
-                slugInput.value = slug;
-            });
-        });
-    </script>
+    <script src="/js/gallery-helper.js"></script>
 }

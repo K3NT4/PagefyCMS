@@ -4,7 +4,6 @@
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Redigera artikel";
-    var editorType = Context.Settings.FirstOrDefault(s => s.Key == "EditorType")?.Value ?? "tinymce";
 }
 
 <h2>Redigera artikel</h2>
@@ -22,6 +21,8 @@
         <input asp-for="EditArticle.Slug" class="form-control" required />
     </div>
 
+    @await Component.InvokeAsync("EditorSelector")
+
     <div class="mb-3">
         <label asp-for="EditArticle.Content" class="form-label">Innehåll</label>
         <textarea asp-for="EditArticle.Content" id="contentArea" class="form-control" rows="8"></textarea>
@@ -32,29 +33,5 @@
 </form>
 
 @section Scripts {
-    @if (editorType == "tinymce")
-    {
-        @await Html.PartialAsync("_TinyMce")
-    }
-    else if (editorType == "toastui")
-    {
-        @await Html.PartialAsync("_ToastUi")
-    }
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const headlineInput = document.querySelector('input[name="EditArticle.Headline"]');
-            const slugInput = document.querySelector('input[name="EditArticle.Slug"]');
-
-            headlineInput.addEventListener("input", function () {
-                let slug = headlineInput.value.toLowerCase()
-                    .replace(/\s+/g, '-')          
-                    .replace(/[^a-z0-9\-]/g, '')    
-                    .replace(/\-+/g, '-')           
-                    .replace(/^-+|-+$/g, '');       
-
-                slugInput.value = slug;
-            });
-        });
-    </script>
+    <script src="/js/gallery-helper.js"></script>
 }

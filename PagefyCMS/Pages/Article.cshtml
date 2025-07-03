@@ -5,7 +5,7 @@
 {
     <h1>@Model.ArticleData.Headline</h1>
     <p><i>@Model.ArticleData.PublishedAt.ToString("yyyy-MM-dd")</i></p>
-    <div>@(Model.ArticleData.Content)</div>
+    <div>@Html.Raw(Model.ArticleData.Content)</div>
 }
 else
 {
