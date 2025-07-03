@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Automatisk slug-generator för sidor och artiklar
+    // Slug-generator för sidor och artiklar
     const titleInput = document.querySelector(
         'input[name="NewPage.Title"], input[name="EditPage.Title"], input[name="NewArticle.Headline"], input[name="EditArticle.Headline"]'
     );
@@ -20,12 +20,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Gallerifunktion med editor-stöd
+    // Galleri-funktion med editor-stöd
     const gallery = document.getElementById("mediaGallery");
     const contentArea = document.getElementById("contentArea");
+    const openGalleryBtn = document.getElementById("openGalleryBtn");
+    const mediaModal = document.getElementById("mediaModal");
 
-    if (gallery && contentArea) {
-        $('#mediaModal').on('show.bs.modal', function () {
+    if (openGalleryBtn && mediaModal && gallery && contentArea) {
+
+        // Öppnar galleriet vid knapptryck (Bootstrap 5)
+        openGalleryBtn.addEventListener("click", () => {
+            const modal = new bootstrap.Modal(mediaModal);
+            modal.show();
+        });
+
+        // Laddar bilder när modalen visas
+        mediaModal.addEventListener("show.bs.modal", function () {
             gallery.innerHTML = "Laddar bilder...";
             fetch("/Admin/Media/ListImages")
                 .then(res => res.json())
@@ -52,15 +62,27 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                             // Fallback till vanlig textarea
                             else if (contentArea) {
-                                contentArea.value += "\n" + tag;
+                                insertAtCaret(contentArea, tag);
                             }
 
-                            $('#mediaModal').modal('hide');
+                            const modal = bootstrap.Modal.getInstance(mediaModal);
+                            modal.hide();
                         });
 
                         gallery.appendChild(el);
                     });
                 });
         });
+    }
+
+    // Infoga text vid markör i vanlig textarea
+    function insertAtCaret(textarea, text) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const before = textarea.value.substring(0, start);
+        const after = textarea.value.substring(end);
+        textarea.value = before + text + after;
+        textarea.selectionStart = textarea.selectionEnd = start + text.length;
+        textarea.focus();
     }
 });

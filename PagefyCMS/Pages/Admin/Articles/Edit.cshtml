@@ -20,7 +20,7 @@
         <label asp-for="EditArticle.Slug" class="form-label">Slug</label>
         <input asp-for="EditArticle.Slug" class="form-control" required />
     </div>
-
+    @await Html.PartialAsync("_MediaGalleryModal")
     @await Component.InvokeAsync("EditorSelector")
 
     <div class="mb-3">

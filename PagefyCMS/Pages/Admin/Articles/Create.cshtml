@@ -18,7 +18,7 @@
         <label asp-for="NewArticle.Slug" class="form-label">Slug (URL-del)</label>
         <input asp-for="NewArticle.Slug" class="form-control" required />
     </div>
-
+    @await Html.PartialAsync("_MediaGalleryModal")
     @await Component.InvokeAsync("EditorSelector")
 
     <div class="mb-3">

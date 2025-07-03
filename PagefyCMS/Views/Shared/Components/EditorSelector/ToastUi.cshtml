@@ -3,32 +3,38 @@
 
 <div id="toastEditor" style="height: 400px;"></div>
 
+<!-- Galleri-knapp visas under editorn -->
+<button type="button" class="btn btn-secondary mb-2" id="openGalleryBtn">
+    Välj bild från galleri
+</button>
+
+<!-- Dold textarea som Toast UI synkar till -->
+<textarea id="contentArea" name="xyz.Content" hidden></textarea>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-        const editor = new toastui.Editor({
+        // Initiera Toast UI Editor
+        window.activeEditor = new toastui.Editor({
             el: document.querySelector('#toastEditor'),
             height: '400px',
-            initialEditType: 'wysiwyg',  // Kan även vara 'markdown' om du vill
+            initialEditType: 'wysiwyg',
             previewStyle: 'vertical'
         });
 
         const hiddenField = document.getElementById('contentArea');
 
-        // Om det redan finns innehåll, fyll editorn
+        // Fyll editor om det redan finns innehåll
         if (hiddenField.value) {
-            editor.setHTML(hiddenField.value);
+            window.activeEditor.setHTML(hiddenField.value);
         }
 
         // Uppdatera textarea vid form-submit
         const form = hiddenField.closest("form");
         if (form) {
             form.addEventListener("submit", () => {
-                hiddenField.value = editor.getHTML();
+                hiddenField.value = window.activeEditor.getHTML();
             });
         }
-
-        // Dölj den vanliga textarea-rutan
-        hiddenField.style.display = 'none';
     });
 </script>

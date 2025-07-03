@@ -30,7 +30,7 @@
         <input asp-for="EditPage.ShowInMenu" class="form-check-input" type="checkbox" />
         <label asp-for="EditPage.ShowInMenu" class="form-check-label">Visa i meny</label>
     </div>
-
+    @await Html.PartialAsync("_MediaGalleryModal")
     @await Component.InvokeAsync("EditorSelector")
 
     <div class="mb-3">

@@ -1,13 +1,25 @@
 ﻿<script src="https://cdn.tiny.cloud/1/1iupv2mkaaja4m62s5dss8ty6hyi9ylrhfgikwy2c7976fl4/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
+<!-- Textarea syns inte direkt, TinyMCE ersätter den -->
+<textarea id="contentArea" name="xyz.Content" hidden></textarea>
+
+<!-- Galleri-knapp under editorn -->
+<button type="button" class="btn btn-secondary mb-2" id="openGalleryBtn">
+    Välj bild från galleri
+</button>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
         tinymce.init({
             selector: '#contentArea',
             menubar: false,
             height: 400,
             plugins: 'link image code lists',
-            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image | code'
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link image | code',
+            setup: function (editor) {
+                window.activeEditor = editor;
+            }
         });
     });
 </script>

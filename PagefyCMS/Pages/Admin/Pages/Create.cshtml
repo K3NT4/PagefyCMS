@@ -22,6 +22,7 @@
     <label asp-for="NewPage.GalleryGroup" class="form-label">Galleri-grupp (valfritt)</label>
     <input asp-for="NewPage.GalleryGroup" class="form-control" />
 </div>
+@await Html.PartialAsync("_MediaGalleryModal")
 @await Component.InvokeAsync("EditorSelector")
 
 <div class="mb-3">
