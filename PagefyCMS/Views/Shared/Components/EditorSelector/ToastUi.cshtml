@@ -1,40 +1,44 @@
 ﻿<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 
-<div id="toastEditor" style="height: 400px;"></div>
-
-<!-- Galleri-knapp visas under editorn -->
+<!-- Galleri-knapp -->
 <button type="button" class="btn btn-secondary mb-2" id="openGalleryBtn">
     Välj bild från galleri
 </button>
 
-<!-- Dold textarea som Toast UI synkar till -->
-<textarea id="contentArea" name="xyz.Content" hidden></textarea>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+            const textarea = document.querySelector('#contentArea');
+            if (!textarea || typeof toastui === "undefined") return;
 
-        // Initiera Toast UI Editor
-        window.activeEditor = new toastui.Editor({
-            el: document.querySelector('#toastEditor'),
-            height: '400px',
-            initialEditType: 'wysiwyg',
-            previewStyle: 'vertical'
-        });
+            const editorContainer = document.createElement('div');
+            editorContainer.id = "toastEditor";
+            editorContainer.style.height = "400px";
+            textarea.style.display = "none";
+            textarea.parentNode.insertBefore(editorContainer, textarea);
 
-        const hiddenField = document.getElementById('contentArea');
-
-        // Fyll editor om det redan finns innehåll
-        if (hiddenField.value) {
-            window.activeEditor.setHTML(hiddenField.value);
-        }
-
-        // Uppdatera textarea vid form-submit
-        const form = hiddenField.closest("form");
-        if (form) {
-            form.addEventListener("submit", () => {
-                hiddenField.value = window.activeEditor.getHTML();
+            const editor = new toastui.Editor({
+                el: editorContainer,
+                height: '400px',
+                initialEditType: 'wysiwyg',
+                previewStyle: 'vertical',
+                initialValue: textarea.value || ""
             });
-        }
+
+            window.activeEditor = {
+                insertText: (text) => editor.insertText(text),
+                setHTML: (html) => editor.setHTML(html),
+                getHTML: () => editor.getHTML()
+            };
+
+            const form = textarea.closest("form");
+            if (form) {
+                form.addEventListener("submit", () => {
+                    textarea.value = editor.getHTML();
+                });
+            }
+
+        }, 100); // fördröj editor-init med 100ms
     });
 </script>

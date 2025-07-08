@@ -1,0 +1,41 @@
+﻿@page
+@model StartpageDesignModel
+@{
+    ViewData["Title"] = "Startsidans Design";
+}
+
+<h1>Startsidans Design</h1>
+
+<form method="post" id="startpageForm">
+    <div>
+        <h3>Välj Layout:</h3>
+        <label><input type="radio" name="Layout" value="single-column" @(Model.Settings.Layout == "single-column" ? "checked" : "") /> Enkel kolumn</label><br />
+        <label><input type="radio" name="Layout" value="two-columns" @(Model.Settings.Layout == "two-columns" ? "checked" : "") /> Två kolumner</label><br />
+        <label><input type="radio" name="Layout" value="grid" @(Model.Settings.Layout == "grid" ? "checked" : "") /> Grid-layout</label>
+    </div>
+
+    <div>
+        <h3>Välj Sektioner:</h3>
+        @foreach (var sec in Model.Sections)
+        {
+            <label>
+                <input type="checkbox" name="Sections" value="@sec" @(Model.Settings.Sections.Contains(sec) ? "checked" : "") />
+                @sec
+            </label><br />
+        }
+    </div>
+
+    <div>
+        <h3>Färgval:</h3>
+        <label>Bakgrundsfärg: <input type="color" name="BackgroundColor" value="@Model.Settings.Colors.Background" /></label><br />
+        <label>Primärfärg: <input type="color" name="PrimaryColor" value="@Model.Settings.Colors.Primary" /></label><br />
+        <label>Textfärg: <input type="color" name="TextColor" value="@Model.Settings.Colors.Text" /></label>
+    </div>
+
+    <div>
+        <h3>Hero-bakgrund:</h3>
+        <input type="text" name="HeroBackground" placeholder="/uploads/hero.webp" value="@Model.Settings.HeroBackground" />
+    </div>
+
+    <button type="submit">💾 Spara ändringar</button>
+</form>

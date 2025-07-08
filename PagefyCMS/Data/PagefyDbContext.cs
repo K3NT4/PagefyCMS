@@ -12,5 +12,8 @@ namespace PagefyCMS.Data
         public DbSet<CmsSetting> Settings { get; set; }
         public DbSet<MediaItem> MediaLibrary { get; set; }
 
+        public DbSet<StartpageSettings> StartpageSettings { get; set; }
+
+
     }
 }

@@ -17,6 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Themes\DarkMode\Css\" />
+    <Folder Include="Themes\DarkMode\Js\" />
+    <Folder Include="Themes\DarkMode\Views\" />
+    <Folder Include="Themes\Standard\Css\" />
+    <Folder Include="Themes\Standard\Views\" />
+    <Folder Include="uploads\Js\" />
     <Folder Include="uploads\originals\" />
     <Folder Include="uploads\webp\medium\" />
     <Folder Include="uploads\webp\large\" />
