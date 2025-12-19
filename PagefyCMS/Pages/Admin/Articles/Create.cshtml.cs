@@ -18,8 +18,19 @@ namespace PagefyCMS.Pages.Admin.Articles
             _context = context;
         }
 
+        public IActionResult OnGet()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
+            return Page();
+        }
+
         public IActionResult OnPost()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             if (!ModelState.IsValid)
                 return Page();
 

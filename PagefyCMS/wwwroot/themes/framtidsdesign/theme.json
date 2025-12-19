@@ -1,0 +1,24 @@
+{
+  "id": "framtidsdesign",
+  "name": "🎨 Framtidsdesign",
+  "description": "Modernt tema med blå och lila gradienter. Perfekt för alla typer av webbplatser.",
+  "version": "1.0.0",
+  "author": "PagefyCMS",
+  "authorUri": "https://pagefycms.se",
+  "license": "MIT",
+  "licenseUri": "https://opensource.org/licenses/MIT",
+  "homepage": "https://pagefycms.se",
+  "tags": ["modern", "gradient", "futuristisk", "universal"],
+  "colors": {
+    "primary": "#667eea",
+    "secondary": "#764ba2",
+    "accent": "#667eea"
+  },
+  "features": {
+    "glassmorph": true,
+    "animations": true,
+    "darkMode": true
+  },
+  "screenshot": "/themes/framtidsdesign/preview.jpg",
+  "styleFile": "/themes/framtidsdesign/style.css"
+}

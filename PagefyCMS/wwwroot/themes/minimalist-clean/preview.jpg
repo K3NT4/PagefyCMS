@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <rect width="800" height="400" fill="white"/>
+  <rect width="800" height="60" fill="white" stroke="black" stroke-width="2"/>
+  <text x="20" y="40" font-family="Georgia, serif" font-size="24" font-weight="bold" fill="black">MINIMALIST CLEAN</text>
+  <line x1="0" y1="60" x2="800" y2="60" stroke="black" stroke-width="2"/>
+  <rect y="80" width="800" height="120" fill="white"/>
+  <text x="40" y="130" font-family="Georgia, serif" font-size="22" font-weight="bold" fill="black">Clean & Simple Design</text>
+  <text x="40" y="155" font-family="Georgia, serif" font-size="13" fill="#333">Focused on content with minimal distractions</text>
+  <rect x="40" y="220" width="250" height="150" stroke="black" stroke-width="2" fill="white"/>
+  <text x="60" y="245" font-family="Georgia, serif" font-size="12" font-weight="bold" fill="black">Column 1</text>
+  <line x1="60" y1="260" x2="250" y2="260" stroke="black" stroke-width="1"/>
+  <text x="60" y="285" font-family="Georgia, serif" font-size="11" fill="#666">Clean typography</text>
+  <rect x="330" y="220" width="250" height="150" stroke="black" stroke-width="2" fill="white"/>
+  <text x="350" y="245" font-family="Georgia, serif" font-size="12" font-weight="bold" fill="black">Column 2</text>
+  <line x1="350" y1="260" x2="540" y2="260" stroke="black" stroke-width="1"/>
+  <text x="350" y="285" font-family="Georgia, serif" font-size="11" fill="#666">Readable layout</text>
+  <rect x="620" y="220" width="140" height="150" stroke="black" stroke-width="2" fill="white"/>
+  <text x="640" y="245" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="black">Sidebar</text>
+  <line x1="640" y1="260" x2="740" y2="260" stroke="black" stroke-width="1"/>
+</svg>

@@ -1,4 +1,6 @@
 using PagefyCMS.Data;
+using PagefyCMS.Addons;
+using PagefyCMS.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,10 +15,22 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(60); // Tiden man är inloggad
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Tiden man Ã¤r inloggad
 });
 
+// Registrera addon-system
+builder.Services.AddSingleton<AddonManager>();
+builder.Services.AddScoped<AddonInstaller>();
+
+// Registrera tema-system
+builder.Services.AddScoped<IThemeManager, ThemeManager>();
+
 var app = builder.Build();
+
+// Initalisera addon-systemet
+var addonManager = app.Services.GetRequiredService<AddonManager>();
+await addonManager.LoadAddonsAsync();
+await addonManager.InitializeAllAddonsAsync();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

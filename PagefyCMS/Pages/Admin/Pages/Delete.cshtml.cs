@@ -18,6 +18,9 @@ namespace PagefyCMS.Pages.Admin.Pages
 
         public IActionResult OnGet(int id)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             PageData = _context.Pages.FirstOrDefault(p => p.Id == id);
             if (PageData == null)
                 return RedirectToPage("/Admin/Pages/Index");
@@ -25,13 +28,16 @@ namespace PagefyCMS.Pages.Admin.Pages
             return Page();
         }
 
-        public IActionResult OnPost(int id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             var page = _context.Pages.FirstOrDefault(p => p.Id == id);
             if (page != null)
             {
                 _context.Pages.Remove(page);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             return RedirectToPage("/Admin/Pages/Index");
         }

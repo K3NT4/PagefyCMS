@@ -1,0 +1,24 @@
+{
+  "id": "professional-midnight",
+  "name": "💼 Professional Midnight",
+  "description": "Klassisk och professionell mörkblå design. Perfekt för företag och konsultbolag.",
+  "version": "1.0.0",
+  "author": "PagefyCMS",
+  "authorUri": "https://pagefycms.se",
+  "license": "MIT",
+  "licenseUri": "https://opensource.org/licenses/MIT",
+  "homepage": "https://pagefycms.se",
+  "tags": ["professional", "corporate", "business", "klassisk"],
+  "colors": {
+    "primary": "#3b82f6",
+    "secondary": "#1e40af",
+    "accent": "#06b6d4"
+  },
+  "features": {
+    "minimalist": true,
+    "darkMode": true,
+    "professional": true
+  },
+  "screenshot": "/themes/professional-midnight/preview.jpg",
+  "styleFile": "/themes/professional-midnight/style.css"
+}

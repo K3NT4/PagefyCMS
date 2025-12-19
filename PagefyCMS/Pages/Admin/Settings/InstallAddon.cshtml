@@ -1,0 +1,239 @@
+@page
+@model PagefyCMS.Pages.Admin.Settings.InstallAddonModel
+@{
+    ViewData["Title"] = "Installera Addons";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1>🧩 Installera Addons</h1>
+            <p class="lead">Ladda upp och installera addons för att utöka PagefyCMS</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-@(Model.MessageIsError ? "danger" : "success") alert-dismissible fade show" role="alert">
+            <strong>@(Model.MessageIsError ? "⚠️ Fel" : "✅ Lyckat"):</strong> @Model.Message
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <!-- UPLOAD SECTION -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📦 Ladda upp Addon</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" asp-page-handler="Upload">
+                        <div class="form-group mb-3">
+                            <label for="UploadFile" class="form-label">
+                                <strong>Välj ZIP-fil</strong>
+                            </label>
+                            <input type="file" class="form-control" id="UploadFile" name="UploadFile" 
+                                   accept=".zip" required onchange="showFileName(this)">
+                            <small class="form-text text-muted">
+                                Max storlek: 10 MB | Format: ZIP
+                            </small>
+                            <div id="fileName" class="mt-2"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-cloud-upload"></i> Installera Addon
+                        </button>
+                    </form>
+
+                    <hr class="my-3" />
+
+                    <h6>📋 Krav för Addon-ZIP:</h6>
+                    <ul class="small">
+                        <li>Innehåller <code>addon.json</code> i root</li>
+                        <li>Filen <code>addon.json</code> måste ha: id, name, version, author</li>
+                        <li>Kan innehålla C#-klasser, views, CSS, JS</li>
+                    </ul>
+
+                    <h6 class="mt-3">📝 Exempel addon.json:</h6>
+                    <pre class="small bg-light p-2"><code>{
+  "id": "com.example.test",
+  "name": "Test Addon",
+  "description": "Min test addon",
+  "version": "1.0.0",
+  "author": "Ditt Namn"
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- INSTALLED ADDONS SECTION -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">✅ Installerade Addons (@Model.InstalledAddons.Count)</h5>
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    @if (Model.InstalledAddons.Count == 0)
+                    {
+                        <p class="text-muted">Inga addons installerade ännu</p>
+                    }
+                    else
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var addon in Model.InstalledAddons)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">@addon.Name</h6>
+                                            <small class="text-muted d-block">
+                                                ID: <code>@addon.Id</code>
+                                            </small>
+                                            <small class="text-muted d-block">
+                                                v@addon.Version • @addon.Author
+                                            </small>
+                                            @if (!string.IsNullOrEmpty(addon.Description))
+                                            {
+                                                <small class="text-dark d-block mt-1">
+                                                    @addon.Description
+                                                </small>
+                                            }
+                                        </div>
+                                        <div>
+                                            @if (addon.IsEnabled)
+                                            {
+                                                <span class="badge bg-success me-2">✅ Aktiverad</span>
+                                                <form method="post" asp-page-handler="Disable" 
+                                                      asp-route-addonId="@addon.Id" style="display:inline;">
+                                                    <button type="submit" class="btn btn-sm btn-warning" title="Inaktivera">
+                                                        🔒 Inaktivera
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary me-2">⚪ Inaktiverad</span>
+                                                <form method="post" asp-page-handler="Enable" 
+                                                      asp-route-addonId="@addon.Id" style="display:inline;">
+                                                    <button type="submit" class="btn btn-sm btn-success" title="Aktivera">
+                                                        ✅ Aktivera
+                                                    </button>
+                                                </form>
+                                            }
+                                            <form method="post" asp-page-handler="Uninstall" 
+                                                  asp-route-addonId="@addon.Id" style="display:inline;">
+                                                <button type="submit" class="btn btn-sm btn-danger" 
+                                                        onclick="return confirm('Är du säker?')" title="Avinstallera">
+                                                    🗑️ Avinstallera
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">ℹ️ Hur Man Skapar En Addon</h5>
+                </div>
+                <div class="card-body">
+                    <h6>1. Skapa en mapp för din addon:</h6>
+                    <pre><code>MyAddon/
+├── addon.json
+├── MyAddon.cs
+└── README.md</code></pre>
+
+                    <h6 class="mt-3">2. Skapa addon.json:</h6>
+                    <pre><code>{
+  "id": "com.mycompany.myaddon",
+  "name": "Min Awesome Addon",
+  "description": "En awesome addon som gör något",
+  "version": "1.0.0",
+  "author": "Ditt Namn",
+  "license": "MIT"
+}</code></pre>
+
+                    <h6 class="mt-3">3. Skapa din addon-klass:</h6>
+                    <pre><code>using PagefyCMS.Addons;
+
+public class MyAddon : BaseAddon
+{
+    public override string Id => "com.mycompany.myaddon";
+    public override string Name => "Min Addon";
+    public override string Description => "En cool addon";
+    public override string Version => "1.0.0";
+    public override string Author => "Din Namn";
+}</code></pre>
+
+                    <h6 class="mt-3">4. Zippa mappen och ladda upp:</h6>
+                    <pre><code>zip -r MyAddon.zip MyAddon/</code></pre>
+
+                    <p class="mt-3 mb-0">
+                        <strong>📖 Läs mer:</strong> 
+                        <a href="/Admin/Settings/Addons" class="btn btn-sm btn-link">Addon-dokumentation</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="/Admin/Dashboard" class="btn btn-secondary">← Tillbaka till Dashboard</a>
+    </div>
+</div>
+
+<style>
+    code {
+        background-color: #f5f5f5;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+    }
+    
+    pre {
+        background-color: #f5f5f5;
+        padding: 12px;
+        border-radius: 5px;
+        overflow-x: auto;
+        border-left: 3px solid #0d6efd;
+    }
+
+    .list-group-item {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+</style>
+
+<script>
+function showFileName(input) {
+    const fileNameDiv = document.getElementById('fileName');
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+        fileNameDiv.innerHTML = `
+            <div class="alert alert-info mb-0">
+                📁 <strong>${file.name}</strong> (${sizeMB} MB)
+            </div>
+        `;
+    } else {
+        fileNameDiv.innerHTML = '';
+    }
+}
+</script>

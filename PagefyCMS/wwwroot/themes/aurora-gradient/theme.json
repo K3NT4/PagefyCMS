@@ -1,0 +1,24 @@
+{
+  "id": "aurora-gradient",
+  "name": "🌌 Aurora Gradient",
+  "description": "Nordljus-inspirerad design med dynamiska gradienter. Magisk och futuristisk känsla.",
+  "version": "1.0.0",
+  "author": "PagefyCMS",
+  "authorUri": "https://pagefycms.se",
+  "license": "MIT",
+  "licenseUri": "https://opensource.org/licenses/MIT",
+  "homepage": "https://pagefycms.se",
+  "tags": ["aurora", "gradient", "nordljus", "magisk", "futuristisk"],
+  "colors": {
+    "primary": "#00d4ff",
+    "secondary": "#6600ff",
+    "accent": "#0099ff"
+  },
+  "features": {
+    "animations": true,
+    "glowEffects": true,
+    "darkMode": true
+  },
+  "screenshot": "/themes/aurora-gradient/preview.jpg",
+  "styleFile": "/themes/aurora-gradient/style.css"
+}

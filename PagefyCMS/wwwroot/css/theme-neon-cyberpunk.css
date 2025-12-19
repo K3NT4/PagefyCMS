@@ -1,0 +1,130 @@
+/* ============================================================================
+   THEME: Neon Cyberpunk
+   Futuristisk neon-tema med lila, rosa och cyan-färger
+   ============================================================================ */
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #00ff88 0%, #00ffff 100%);
+    --secondary-gradient: linear-gradient(135deg, #ff0099 0%, #ff00ff 100%);
+    --dark-bg: #0a0015;
+    --card-bg: #1a0a2e;
+    --border-color: #16213e;
+    --text-light: #00ffff;
+    --text-muted: #00ff88;
+    --accent-blue: #00ffff;
+    --accent-pink: #ff0099;
+    --success-color: #00ff88;
+    --warning-color: #ffaa00;
+    --danger-color: #ff0055;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0015 0%, #1a0a2e 100%);
+    color: var(--text-light);
+}
+
+body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 153, 0.15) 0%, transparent 50%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.navbar {
+    background: linear-gradient(90deg, rgba(10, 0, 21, 0.95) 0%, rgba(26, 10, 46, 0.95) 100%);
+    border-bottom: 2px solid var(--text-muted);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.card {
+    background: linear-gradient(135deg, rgba(26, 10, 46, 0.8) 0%, rgba(22, 33, 62, 0.6) 100%);
+    border: 1px solid var(--text-muted);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.15);
+}
+
+.card:hover {
+    box-shadow: 0 0 30px rgba(255, 0, 153, 0.3);
+    border-color: var(--accent-pink);
+}
+
+.card-header {
+    background: linear-gradient(90deg, #00ff88 0%, #00ffff 100%);
+    color: #0a0015 !important;
+    font-weight: 700;
+    text-shadow: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #00ff88 0%, #00ffff 100%);
+    color: #0a0015;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+    color: #0a0015;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff0055 0%, #ff0099 100%);
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 0, 153, 0.4);
+}
+
+.btn-danger:hover {
+    box-shadow: 0 0 25px rgba(255, 0, 153, 0.6);
+    color: white;
+}
+
+.form-control, .form-select {
+    background: rgba(22, 33, 62, 0.7);
+    border: 1px solid var(--text-muted);
+    color: var(--text-light);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-pink);
+    box-shadow: 0 0 15px rgba(255, 0, 153, 0.2);
+}
+
+.alert-success {
+    background: rgba(0, 255, 136, 0.15);
+    border-left-color: var(--success-color);
+    color: var(--text-light);
+}
+
+.alert-danger {
+    background: rgba(255, 0, 85, 0.15);
+    border-left-color: var(--danger-color);
+    color: var(--text-light);
+}
+
+.badge {
+    text-shadow: 0 0 10px currentColor;
+}
+
+.list-group-item {
+    background: rgba(22, 33, 62, 0.5);
+    border-color: var(--text-muted);
+    color: var(--text-light);
+}
+
+.list-group-item:hover {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: var(--text-muted);
+}
+
+pre {
+    border-left-color: var(--text-muted);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}

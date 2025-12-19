@@ -1,0 +1,24 @@
+{
+  "id": "minimalist-clean",
+  "name": "✨ Minimalist Clean",
+  "description": "Rent och enkelt tema med fokus på innehål. Perfekt för portfolio och personliga sajter.",
+  "version": "1.0.0",
+  "author": "PagefyCMS",
+  "authorUri": "https://pagefycms.se",
+  "license": "MIT",
+  "licenseUri": "https://opensource.org/licenses/MIT",
+  "homepage": "https://pagefycms.se",
+  "tags": ["minimalist", "clean", "portfolio", "enkelt"],
+  "colors": {
+    "primary": "#000000",
+    "secondary": "#404040",
+    "accent": "#0066cc"
+  },
+  "features": {
+    "minimal": true,
+    "lightMode": true,
+    "typography": true
+  },
+  "screenshot": "/themes/minimalist-clean/preview.jpg",
+  "styleFile": "/themes/minimalist-clean/style.css"
+}

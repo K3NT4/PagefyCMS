@@ -1,0 +1,24 @@
+{
+  "id": "gaming-edge",
+  "name": "🎮 Gaming Edge",
+  "description": "Energisk och modern design för gaming och esports-nyheter. RGB-inspirerad med dynamiska effekter.",
+  "version": "1.0.0",
+  "author": "PagefyCMS",
+  "authorUri": "https://pagefycms.se",
+  "license": "MIT",
+  "licenseUri": "https://opensource.org/licenses/MIT",
+  "homepage": "https://pagefycms.se",
+  "tags": ["gaming", "esports", "streaming", "energisk", "RGB"],
+  "colors": {
+    "primary": "#7c3aed",
+    "secondary": "#ec4899",
+    "accent": "#06b6d4"
+  },
+  "features": {
+    "animations": true,
+    "gradients": true,
+    "darkMode": true
+  },
+  "screenshot": "/themes/gaming-edge/preview.jpg",
+  "styleFile": "/themes/gaming-edge/style.css"
+}

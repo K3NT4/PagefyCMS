@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="grad-news" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#991b1b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="#1a1a1a"/>
+  <rect width="800" height="60" fill="#262626" opacity="0.99" stroke="#dc2626" stroke-width="3"/>
+  <text x="20" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="#dc2626">📰 NEWS HUB</text>
+  <rect y="70" width="800" height="100" fill="#262626" opacity="0.7" stroke="#dc2626" stroke-width="2"/>
+  <text x="40" y="110" font-family="Arial" font-size="26" font-weight="bold" fill="#f5f5f5">BREAKING NEWS HEADLINE</text>
+  <text x="40" y="135" font-family="Arial" font-size="12" fill="#d4d4d4">Published 2 hours ago • By Staff Writer</text>
+  <rect x="40" y="190" width="350" height="150" fill="#262626" opacity="0.6" stroke="#3f3f3f" stroke-width="1"/>
+  <text x="60" y="215" font-family="Arial" font-size="14" font-weight="bold" fill="#dc2626">Latest Story</text>
+  <text x="60" y="240" font-family="Arial" font-size="12" fill="#f5f5f5">Important news update</text>
+  <rect x="420" y="190" width="350" height="150" fill="#262626" opacity="0.6" stroke="#3f3f3f" stroke-width="1"/>
+  <text x="440" y="215" font-family="Arial" font-size="14" font-weight="bold" fill="#ea580c">Top Story</text>
+  <text x="440" y="240" font-family="Arial" font-size="12" fill="#f5f5f5">Featured article</text>
+</svg>

@@ -1,0 +1,189 @@
+/* ============================================================================
+   THEME: News Hub
+   Optimerad tema för nyhetswebbplats med fokus på läsbarhet
+   ============================================================================ */
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    --secondary-gradient: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+    --dark-bg: #1a1a1a;
+    --card-bg: #262626;
+    --border-color: #3f3f3f;
+    --text-light: #f5f5f5;
+    --text-muted: #d4d4d4;
+    --accent-blue: #2563eb;
+    --accent-red: #dc2626;
+    --success-color: #16a34a;
+    --warning-color: #ea580c;
+    --danger-color: #dc2626;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+body::before {
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(234, 88, 12, 0.08) 0%, transparent 50%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.3;
+    margin: 1.5rem 0 0.5rem 0;
+}
+
+h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+}
+
+h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.navbar {
+    background: linear-gradient(90deg, rgba(26, 26, 26, 0.99) 0%, rgba(38, 38, 38, 0.99) 100%);
+    border-bottom: 3px solid var(--accent-red);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--accent-red) !important;
+}
+
+.card {
+    background: linear-gradient(135deg, rgba(38, 38, 38, 0.9) 0%, rgba(63, 63, 63, 0.6) 100%);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-red);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.15);
+    transform: translateY(-4px);
+    border-left-color: var(--warning-color);
+}
+
+.card-header {
+    background: var(--primary-gradient);
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-bottom: none;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    color: white;
+}
+
+.form-control, .form-select {
+    background: rgba(63, 63, 63, 0.6);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-red);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+    background: rgba(63, 63, 63, 0.8);
+}
+
+.form-label {
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.alert-success {
+    background: rgba(22, 163, 74, 0.15);
+    border-left: 4px solid var(--success-color);
+    color: var(--text-light);
+}
+
+.alert-danger {
+    background: rgba(220, 38, 38, 0.15);
+    border-left: 4px solid var(--danger-color);
+    color: var(--text-light);
+}
+
+.alert-warning {
+    background: rgba(234, 88, 12, 0.15);
+    border-left: 4px solid var(--warning-color);
+    color: var(--text-light);
+}
+
+.badge {
+    font-weight: 700;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+}
+
+.bg-danger {
+    background: var(--primary-gradient) !important;
+}
+
+.list-group-item {
+    background: rgba(63, 63, 63, 0.4);
+    border-color: var(--border-color);
+    color: var(--text-light);
+    border-left: 3px solid transparent;
+    padding: 1rem 1.25rem;
+}
+
+.list-group-item:hover {
+    background: rgba(220, 38, 38, 0.1);
+    border-left-color: var(--accent-red);
+}
+
+pre {
+    background: rgba(38, 38, 38, 0.8);
+    border-left: 4px solid var(--accent-red);
+    color: #e5e7eb;
+}
+
+code {
+    color: #fca5a5;
+    background: rgba(220, 38, 38, 0.15);
+}
+
+footer {
+    border-top: 3px solid var(--accent-red);
+    background: linear-gradient(90deg, rgba(26, 26, 26, 0.95) 0%, rgba(38, 38, 38, 0.95) 100%);
+}
+
+/* News-specifika stilar */
+.article-date {
+    color: var(--accent-red);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.article-category {
+    background: linear-gradient(135deg, var(--accent-red) 0%, var(--warning-color) 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}

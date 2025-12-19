@@ -18,17 +18,21 @@ namespace PagefyCMS.Pages.Admin.Pages
             _context = context;
         }
 
+        public IActionResult OnGet()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
+            return Page();
+        }
+
         public IActionResult OnPost()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             if (!ModelState.IsValid)
             {
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"- {state.Key}: {error.ErrorMessage}");
-                    }
-                }
                 return Page();
             }
 
@@ -41,7 +45,7 @@ namespace PagefyCMS.Pages.Admin.Pages
 
             if (string.IsNullOrWhiteSpace(NewPage.GalleryGroup))
             {
-                NewPage.GalleryGroup = ""; // Eller "default" eller vad du vill
+                NewPage.GalleryGroup = null;
             }
 
             _context.Pages.Add(NewPage);

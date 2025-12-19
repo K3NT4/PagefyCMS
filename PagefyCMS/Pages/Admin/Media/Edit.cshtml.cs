@@ -30,6 +30,9 @@ namespace PagefyCMS.Pages.Admin.Media
 
         public IActionResult OnGet(Guid id)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             Media = _context.MediaLibrary.FirstOrDefault(m => m.Id == id);
             if (Media == null)
             {
@@ -46,6 +49,9 @@ namespace PagefyCMS.Pages.Admin.Media
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             var media = _context.MediaLibrary.FirstOrDefault(m => m.Id == Id);
             if (media == null)
             {

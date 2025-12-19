@@ -18,17 +18,23 @@ namespace PagefyCMS.Pages.Admin.Articles
 
         public IActionResult OnGet(int id)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             ArticleData = _context.Articles.FirstOrDefault(a => a.Id == id);
             return Page();
         }
 
-        public IActionResult OnPost(int id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             var article = _context.Articles.FirstOrDefault(a => a.Id == id);
             if (article != null)
             {
                 _context.Articles.Remove(article);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             return RedirectToPage("/Admin/Articles/Index");
         }

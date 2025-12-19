@@ -1,0 +1,24 @@
+{
+  "id": "neon-cyberpunk",
+  "name": "⚡ Neon Cyberpunk",
+  "description": "Futuristisk neon-design med glödande effekter. Perfekt för tech-startups och gaming-sajter.",
+  "version": "1.0.0",
+  "author": "PagefyCMS",
+  "authorUri": "https://pagefycms.se",
+  "license": "MIT",
+  "licenseUri": "https://opensource.org/licenses/MIT",
+  "homepage": "https://pagefycms.se",
+  "tags": ["cyberpunk", "neon", "futuristisk", "tech", "gaming"],
+  "colors": {
+    "primary": "#00ff88",
+    "secondary": "#ff0099",
+    "accent": "#00ffff"
+  },
+  "features": {
+    "glowEffects": true,
+    "animations": true,
+    "darkMode": true
+  },
+  "screenshot": "/themes/neon-cyberpunk/preview.jpg",
+  "styleFile": "/themes/neon-cyberpunk/style.css"
+}

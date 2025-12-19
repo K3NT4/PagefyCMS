@@ -20,6 +20,9 @@ namespace PagefyCMS.Pages.Admin.Articles
 
         public IActionResult OnGet(int id)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             var article = _context.Articles.FirstOrDefault(a => a.Id == id);
             if (article == null)
                 return RedirectToPage("./Index");
@@ -30,6 +33,9 @@ namespace PagefyCMS.Pages.Admin.Articles
 
         public IActionResult OnPost()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             if (!ModelState.IsValid)
                 return Page();
 

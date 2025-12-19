@@ -23,69 +23,112 @@ public class MediaController : Controller
         if (file == null || file.Length == 0)
             return BadRequest("Ingen fil vald");
 
-        var fileName = Path.GetFileNameWithoutExtension(file.FileName);
-        var ext = Path.GetExtension(file.FileName).ToLower();
-
-        var id = Guid.NewGuid();
-        var slug = $"{fileName}-{id}{ext}";
-        var uploadsPath = Path.Combine(_env.WebRootPath, "uploads");
-        var originalsPath = Path.Combine(uploadsPath, "originals", slug);
-
-        // Spara original
-        using (var stream = new FileStream(originalsPath, FileMode.Create))
+        try
         {
-            await file.CopyToAsync(stream);
+            var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+            var ext = Path.GetExtension(file.FileName).ToLower();
+
+            var id = Guid.NewGuid();
+            var slug = $"{fileName}-{id}{ext}";
+            var uploadsPath = Path.Combine(_env.WebRootPath, "uploads");
+            
+            // Ensure directories exist
+            Directory.CreateDirectory(Path.Combine(uploadsPath, "originals"));
+            Directory.CreateDirectory(Path.Combine(uploadsPath, "webp", "small"));
+            Directory.CreateDirectory(Path.Combine(uploadsPath, "webp", "medium"));
+            Directory.CreateDirectory(Path.Combine(uploadsPath, "webp", "large"));
+
+            var originalsPath = Path.Combine(uploadsPath, "originals", slug);
+
+            // Spara original
+            using (var stream = new FileStream(originalsPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Konvertera till WebP
+            var smallPath = Path.Combine(uploadsPath, "webp", "small", $"{fileName}-{id}.webp");
+            var mediumPath = Path.Combine(uploadsPath, "webp", "medium", $"{fileName}-{id}.webp");
+            var largePath = Path.Combine(uploadsPath, "webp", "large", $"{fileName}-{id}.webp");
+
+            using (var image = SixLabors.ImageSharp.Image.Load(originalsPath))
+            {
+                image.Mutate(x => x.Resize(400, 0));
+                await image.SaveAsWebpAsync(smallPath);
+
+                image.Mutate(x => x.Resize(800, 0));
+                await image.SaveAsWebpAsync(mediumPath);
+
+                image.Mutate(x => x.Resize(1600, 0));
+                await image.SaveAsWebpAsync(largePath);
+            }
+
+            // Spara i databasen
+            var media = new MediaItem
+            {
+                Id = id,
+                Filename = file.FileName,
+                Slug = slug,
+                OriginalPath = $"/uploads/originals/{slug}",
+                WebpSmall = $"/uploads/webp/small/{fileName}-{id}.webp",
+                WebpMedium = $"/uploads/webp/medium/{fileName}-{id}.webp",
+                WebpLarge = $"/uploads/webp/large/{fileName}-{id}.webp",
+                UploadedAt = DateTime.UtcNow
+            };
+
+            _context.MediaLibrary.Add(media);
+            await _context.SaveChangesAsync();
+
+            return Ok(media);
         }
-
-        // Konvertera till WebP
-        var smallPath = Path.Combine(uploadsPath, "webp", "small", $"{fileName}-{id}.webp");
-        var mediumPath = Path.Combine(uploadsPath, "webp", "medium", $"{fileName}-{id}.webp");
-        var largePath = Path.Combine(uploadsPath, "webp", "large", $"{fileName}-{id}.webp");
-
-        using (var image = SixLabors.ImageSharp.Image.Load(originalsPath))
+        catch (Exception ex)
         {
-            image.Mutate(x => x.Resize(400, 0));
-            await image.SaveAsWebpAsync(smallPath);
-
-            image.Mutate(x => x.Resize(800, 0));
-            await image.SaveAsWebpAsync(mediumPath);
-
-            image.Mutate(x => x.Resize(1600, 0));
-            await image.SaveAsWebpAsync(largePath);
+            return StatusCode(500, $"Fel vid filuppladdning: {ex.Message}");
         }
-
-        // Spara i databasen
-        var media = new MediaItem
-        {
-            Id = id,
-            Filename = file.FileName,
-            Slug = slug,
-            OriginalPath = $"/uploads/originals/{slug}",
-            WebpSmall = $"/uploads/webp/small/{fileName}-{id}.webp",
-            WebpMedium = $"/uploads/webp/medium/{fileName}-{id}.webp",
-            WebpLarge = $"/uploads/webp/large/{fileName}-{id}.webp",
-            UploadedAt = DateTime.UtcNow
-        };
-
-        _context.MediaLibrary.Add(media);
-        await _context.SaveChangesAsync();
-
-        return Ok(media);
     }
+
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var media = await _context.MediaLibrary.FindAsync(id);
-        if (media == null) return NotFound();
+        try
+        {
+            var media = await _context.MediaLibrary.FindAsync(id);
+            if (media == null) 
+                return NotFound();
 
-        System.IO.File.Delete(Path.Combine(_env.WebRootPath, media.WebpSmall.TrimStart('/')));
-        System.IO.File.Delete(Path.Combine(_env.WebRootPath, media.WebpMedium.TrimStart('/')));
-        System.IO.File.Delete(Path.Combine(_env.WebRootPath, media.WebpLarge.TrimStart('/')));
-        System.IO.File.Delete(Path.Combine(_env.WebRootPath, media.OriginalPath.TrimStart('/')));
+            // Delete files with error handling
+            var filesToDelete = new[] { 
+                media.WebpSmall, 
+                media.WebpMedium, 
+                media.WebpLarge, 
+                media.OriginalPath 
+            };
 
-        _context.MediaLibrary.Remove(media);
-        await _context.SaveChangesAsync();
+            foreach (var filePath in filesToDelete)
+            {
+                try
+                {
+                    var fullPath = Path.Combine(_env.WebRootPath, filePath.TrimStart('/'));
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                }
+                catch (Exception)
+                {
+                    // Log error but continue with deletion
+                }
+            }
 
-        return Ok();
+            _context.MediaLibrary.Remove(media);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Fel vid borttagning: {ex.Message}");
+        }
     }
-
 }
+

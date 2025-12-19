@@ -5,31 +5,96 @@
     ViewData["Title"] = "Inställningar";
 }
 
-<h2>Sidinställningar</h2>
+<div class="container">
+    <h2><i class="bi bi-gear"></i> Sidinställningar</h2>
 
-@if (Model.Saved)
-{
-    <div class="alert alert-success">Inställningarna sparades!</div>
+    @if (Model.Saved)
+    {
+        <div class="alert alert-success"><i class="bi bi-check-circle"></i> Inställningarna sparades!</div>
+    }
+
+    <form method="post">
+        <div class="row">
+            <!-- Basala inställningar -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle"></i> Grundläggande
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="siteTitle" class="form-label">Sidans namn</label>
+                            <input type="text" id="siteTitle" name="SiteTitle" value="@Model.SiteTitle" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editorType" class="form-label">Val av editor</label>
+                            <select id="editorType" name="EditorType" class="form-select">
+                                <option value="tinymce" selected="@(Model.EditorType == "tinymce" ? "selected" : null)">TinyMCE</option>
+                                <option value="toastui" selected="@(Model.EditorType == "toastui" ? "selected" : null)">Toast UI Editor</option>
+                            </select>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="editorEnabled" name="EditorEnabled" value="true" @(Model.EditorEnabled ? "checked" : "") />
+                            <label class="form-check-label" for="editorEnabled">Aktivera editor på sidor och artiklar</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tema-väljare -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-palette"></i> Tema
+                    </div>
+                    <div class="card-body">
+                        <label for="activeTheme" class="form-label">Välj tema för webbplatsen</label>
+                        <select id="activeTheme" name="ActiveTheme" class="form-select mb-3" onchange="updateThemePreview(this.value)">
+                            <option value="site" selected="@(Model.ActiveTheme == "site" ? "selected" : null)">🎨 Framtidsdesign (Standard)</option>
+                            <option value="neon-cyberpunk" selected="@(Model.ActiveTheme == "neon-cyberpunk" ? "selected" : null)">⚡ Neon Cyberpunk</option>
+                            <option value="professional-midnight" selected="@(Model.ActiveTheme == "professional-midnight" ? "selected" : null)">💼 Professional Midnight</option>
+                            <option value="news-hub" selected="@(Model.ActiveTheme == "news-hub" ? "selected" : null)">📰 News Hub</option>
+                            <option value="gaming-edge" selected="@(Model.ActiveTheme == "gaming-edge" ? "selected" : null)">🎮 Gaming Edge</option>
+                            <option value="minimalist-clean" selected="@(Model.ActiveTheme == "minimalist-clean" ? "selected" : null)">✨ Minimalist Clean</option>
+                            <option value="aurora-gradient" selected="@(Model.ActiveTheme == "aurora-gradient" ? "selected" : null)">🌌 Aurora Gradient</option>
+                        </select>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <small>
+                                <strong>Tema-guide:</strong><br>
+                                🎨 Framtidsdesign - Modernt tema med blå/lila gradienter<br>
+                                ⚡ Neon Cyberpunk - Futuristisk neon-design<br>
+                                💼 Professional - Klassisk för företag<br>
+                                📰 News Hub - Optimerad för nyhetswebbplats<br>
+                                🎮 Gaming Edge - För spel- och gaming-nyheter<br>
+                                ✨ Minimalist - Rent och enkelt<br>
+                                🌌 Aurora - Nordljus-inspirerad
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-save"></i> Spara ändringar
+        </button>
+    </form>
+</div>
+
+<style>
+    .alert-info {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+</style>
+
+<script>
+function updateThemePreview(theme) {
+    // Du kan senare implementera preview av tema här
+    console.log('Tema valt: ' + theme);
 }
-
-<form method="post">
-    <div class="mb-3">
-        <label for="siteTitle" class="form-label">Sidans namn</label>
-        <input type="text" id="siteTitle" name="SiteTitle" value="@Model.SiteTitle" class="form-control" required />
-    </div>
-
-    <div class="mb-3">
-        <label for="editorType" class="form-label">Val av editor</label>
-        <select id="editorType" name="EditorType" class="form-select">
-<option value="tinymce" selected="@(Model.EditorType == "tinymce" ? "selected" : null)">TinyMCE</option>
-<option value="toastui" selected="@(Model.EditorType == "toastui" ? "selected" : null)">Toast UI Editor</option>
-        </select>
-    </div>
-
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="editorEnabled" name="EditorEnabled" value="true" @(Model.EditorEnabled ? "checked" : "") />
-        <label class="form-check-label" for="editorEnabled">Aktivera editor på sidor och artiklar</label>
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-3">Spara ändringar</button>
-</form>
+</script>

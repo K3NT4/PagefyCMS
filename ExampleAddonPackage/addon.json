@@ -1,0 +1,14 @@
+{
+  "id": "com.pagefy.example",
+  "name": "Example Addon",
+  "description": "Ett exempel-addon som visar hur addons fungerar",
+  "version": "1.0.0",
+  "author": "PagefyCMS Team",
+  "license": "MIT",
+  "minCmsVersion": "1.0.0",
+  "tags": ["example", "demo"],
+  "settings": {
+    "enabled": true,
+    "autoLoad": true
+  }
+}

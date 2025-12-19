@@ -1,0 +1,15 @@
+{
+  "id": "com.example.myaddon",
+  "name": "Min Addon",
+  "description": "Beskrivning av vad addonen gör",
+  "version": "1.0.0",
+  "author": "Din Namn",
+  "authorUrl": "https://example.com",
+  "license": "MIT",
+  "minCmsVersion": "1.0.0",
+  "tags": ["example", "tutorial"],
+  "settings": {
+    "enabled": true,
+    "autoLoad": true
+  }
+}

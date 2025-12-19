@@ -1,0 +1,348 @@
+/* ============================================================================
+   THEME: Aurora Gradient
+   Inspirerad av nordljus med dynamiska gradienter
+   ============================================================================ */
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #00d4ff 0%, #0099ff 50%, #6600ff 100%);
+    --secondary-gradient: linear-gradient(135deg, #ff00ff 0%, #ff6600 100%);
+    --dark-bg: #0a0e27;
+    --card-bg: #1a1f42;
+    --border-color: #2d4a69;
+    --text-light: #e0f7ff;
+    --text-muted: #b0d4ff;
+    --accent-cyan: #00d4ff;
+    --accent-blue: #0099ff;
+    --accent-purple: #6600ff;
+    --success-color: #00ff99;
+    --warning-color: #ffaa00;
+    --danger-color: #ff3366;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1f42 50%, #2d1b4e 100%);
+    color: var(--text-light);
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(ellipse 600px 400px at 20% 30%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 600px 400px at 80% 70%, rgba(102, 0, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 400px 300px at 50% 50%, rgba(0, 153, 255, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+    animation: aurora-shift 8s ease-in-out infinite;
+}
+
+@keyframes aurora-shift {
+    0%, 100% {
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        filter: hue-rotate(10deg);
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.3));
+    font-weight: 800;
+}
+
+h1 {
+    font-size: 2.8rem;
+    letter-spacing: 1px;
+}
+
+p {
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
+a {
+    color: var(--accent-cyan);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-blue);
+    text-shadow: 0 0 10px rgba(0, 153, 255, 0.5);
+}
+
+.navbar {
+    background: linear-gradient(90deg, rgba(10, 14, 39, 0.95) 0%, rgba(26, 31, 66, 0.95) 100%);
+    border-bottom: 2px solid;
+    border-image: var(--primary-gradient) 1;
+    box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.navbar-brand {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
+    font-size: 1.6rem;
+    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+}
+
+.nav-link {
+    color: var(--text-light) !important;
+    font-weight: 600;
+    position: relative;
+    margin: 0 0.5rem;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::before {
+    width: 100%;
+}
+
+.nav-link:hover {
+    color: var(--accent-cyan) !important;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.card {
+    background: linear-gradient(135deg, rgba(26, 31, 66, 0.8) 0%, rgba(45, 74, 105, 0.5) 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+    transition: left 0.3s ease;
+    z-index: 1;
+}
+
+.card:hover {
+    box-shadow: 0 12px 48px rgba(0, 212, 255, 0.25);
+    border-color: var(--accent-cyan);
+    transform: translateY(-6px);
+}
+
+.card:hover::before {
+    left: 100%;
+}
+
+.card-header {
+    background: var(--primary-gradient);
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--accent-cyan);
+    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+}
+
+.btn {
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 12px 36px rgba(0, 212, 255, 0.5);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #4a5a7a 0%, #5a7a9a 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(90, 122, 154, 0.3);
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 12px 36px rgba(90, 122, 154, 0.5);
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ff3366 0%, #ff0099 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(255, 51, 102, 0.3);
+}
+
+.btn-danger:hover {
+    box-shadow: 0 12px 36px rgba(255, 51, 102, 0.5);
+    color: white;
+}
+
+.form-control, .form-select {
+    background: rgba(45, 74, 105, 0.6);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2);
+    background: rgba(45, 74, 105, 0.9);
+    color: var(--text-light);
+}
+
+.form-label {
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.alert {
+    border: none;
+    border-left: 4px solid;
+    backdrop-filter: blur(10px);
+    background: rgba(26, 31, 66, 0.8);
+}
+
+.alert-success {
+    background: rgba(0, 255, 153, 0.15);
+    border-left-color: var(--success-color);
+    color: var(--text-light);
+}
+
+.alert-danger {
+    background: rgba(255, 51, 102, 0.15);
+    border-left-color: var(--danger-color);
+    color: var(--text-light);
+}
+
+.alert-warning {
+    background: rgba(255, 170, 0, 0.15);
+    border-left-color: var(--warning-color);
+    color: var(--text-light);
+}
+
+.alert-info {
+    background: rgba(0, 212, 255, 0.15);
+    border-left-color: var(--accent-cyan);
+    color: var(--text-light);
+}
+
+.badge {
+    font-weight: 700;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.list-group-item {
+    background: rgba(45, 74, 105, 0.4);
+    border-color: var(--border-color);
+    color: var(--text-light);
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-left-color: var(--accent-cyan);
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+pre {
+    background: rgba(10, 14, 39, 0.8);
+    border-left: 4px solid var(--accent-cyan);
+    border-radius: 8px;
+    color: var(--text-light);
+    box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+    border-top: 1px solid var(--border-color);
+}
+
+code {
+    color: var(--accent-cyan);
+    background: rgba(0, 212, 255, 0.15);
+    border-radius: 4px;
+    text-shadow: 0 0 5px rgba(0, 212, 255, 0.5);
+}
+
+footer {
+    border-top: 2px solid;
+    border-image: var(--primary-gradient) 1;
+    background: linear-gradient(90deg, rgba(10, 14, 39, 0.95) 0%, rgba(26, 31, 66, 0.95) 100%);
+    box-shadow: 0 -8px 24px rgba(0, 212, 255, 0.1);
+}
+
+/* Aurora-specifika effekter */
+.aurora-glow {
+    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.5));
+}
+
+.aurora-text {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+}

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
@@ -15,9 +16,13 @@ namespace PagefyCMS.Pages.Admin.Pages
             _context = context;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
+                return RedirectToPage("/Admin/Login");
+
             Pages = _context.Pages.OrderByDescending(p => p.CreatedAt).ToList();
+            return Page();
         }
     }
 }

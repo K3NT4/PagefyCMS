@@ -1,0 +1,24 @@
+{
+  "id": "news-hub",
+  "name": "📰 News Hub",
+  "description": "Optimerad för nyhetswebbplatser med fokus på läsbarhet och artikelöversikter.",
+  "version": "1.0.0",
+  "author": "PagefyCMS",
+  "authorUri": "https://pagefycms.se",
+  "license": "MIT",
+  "licenseUri": "https://opensource.org/licenses/MIT",
+  "homepage": "https://pagefycms.se",
+  "tags": ["nyheter", "blogg", "media", "artikel", "läsbarhet"],
+  "colors": {
+    "primary": "#dc2626",
+    "secondary": "#ea580c",
+    "accent": "#2563eb"
+  },
+  "features": {
+    "typography": true,
+    "categories": true,
+    "darkMode": true
+  },
+  "screenshot": "/themes/news-hub/preview.jpg",
+  "styleFile": "/themes/news-hub/style.css"
+}

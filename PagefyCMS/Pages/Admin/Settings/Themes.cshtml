@@ -1,0 +1,318 @@
+@page
+@model PagefyCMS.Pages.Admin.Settings.ThemesModel
+@{
+    ViewData["Title"] = "Theme Browser";
+}
+
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-2">🎨 Theme Manager</h1>
+            <p class="text-muted">Upload, activate, and manage your website themes</p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-@(Model.IsSuccess ? "success" : "danger") alert-dismissible fade show" role="alert">
+            @Model.Message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Upload Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-2 border-primary">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-cloud-upload"></i> Upload New Theme
+                    </h5>
+                    <p class="text-muted small mb-3">Drag and drop a .zip file here or click to select</p>
+                    
+                    <form id="themeUploadForm" method="post" enctype="multipart/form-data" asp-page-handler="UploadTheme">
+                        <div class="upload-zone" id="uploadZone">
+                            <div class="upload-content text-center py-5">
+                                <i class="bi bi-box-seam display-4 text-primary mb-3"></i>
+                                <p class="mb-2"><strong>Drop theme zip file here</strong></p>
+                                <p class="text-muted small">or</p>
+                                <label for="themeFile" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-folder-open"></i> Browse Files
+                                </label>
+                                <input type="file" id="themeFile" name="themeFile" accept=".zip" style="display: none;">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Themes Grid -->
+    <div class="row g-4">
+        @if (Model.AvailableThemes != null && Model.AvailableThemes.Count > 0)
+        {
+            @foreach (var theme in Model.AvailableThemes)
+            {
+                var isActive = theme.Id == Model.ActiveThemeId;
+                <div class="col-md-6 col-lg-4">
+                    <div class="card theme-card h-100 @(isActive ? "border-success border-3" : "border-light")">
+                        @* Active Badge *@
+                        @if (isActive)
+                        {
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-success fs-6 px-3 py-2">✓ Active</span>
+                            </div>
+                        }
+
+                        @* Theme Preview Image *@
+                        <div class="theme-preview position-relative">
+                            @if (!string.IsNullOrEmpty(theme.Screenshot))
+                            {
+                                <img src="@theme.Screenshot" alt="@theme.Name" class="card-img-top" style="height: 220px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div style="height: 220px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                                    <span class="text-white fw-bold">@theme.Name</span>
+                                </div>
+                            }
+                        </div>
+
+                        @* Theme Info *@
+                        <div class="card-body">
+                            <h5 class="card-title mb-2">@theme.Name</h5>
+                            @if (!string.IsNullOrEmpty(theme.Description))
+                            {
+                                <p class="card-text text-muted small">@theme.Description</p>
+                            }
+
+                            @* Color Preview *@
+                            @if (theme.Colors != null && (!string.IsNullOrEmpty(theme.Colors.Primary) || !string.IsNullOrEmpty(theme.Colors.Secondary) || !string.IsNullOrEmpty(theme.Colors.Accent)))
+                            {
+                                <div class="mb-3">
+                                    <p class="small fw-bold mb-2">🎨 Colors:</p>
+                                    <div class="d-flex gap-2">
+                                        @if (!string.IsNullOrEmpty(theme.Colors.Primary))
+                                        {
+                                            <div class="color-swatch" style="background-color: @theme.Colors.Primary;" title="Primary"></div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(theme.Colors.Secondary))
+                                        {
+                                            <div class="color-swatch" style="background-color: @theme.Colors.Secondary;" title="Secondary"></div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(theme.Colors.Accent))
+                                        {
+                                            <div class="color-swatch" style="background-color: @theme.Colors.Accent;" title="Accent"></div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            @* Features *@
+                            @if (theme.Features != null && (theme.Features.DarkMode || theme.Features.Animations || theme.Features.GlowEffects || theme.Features.ResponsiveDesign || theme.Features.CustomFont))
+                            {
+                                <div class="mb-3">
+                                    <p class="small fw-bold mb-2">✨ Features:</p>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @if (theme.Features.DarkMode)
+                                        {
+                                            <span class="badge bg-dark">🌙 Dark</span>
+                                        }
+                                        @if (theme.Features.Animations)
+                                        {
+                                            <span class="badge bg-info">✨ Animated</span>
+                                        }
+                                        @if (theme.Features.GlowEffects)
+                                        {
+                                            <span class="badge bg-warning">💫 Glow</span>
+                                        }
+                                        @if (theme.Features.ResponsiveDesign)
+                                        {
+                                            <span class="badge bg-success">📱 Responsive</span>
+                                        }
+                                        @if (theme.Features.CustomFont)
+                                        {
+                                            <span class="badge bg-secondary">🔤 Font</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            @* Theme Metadata *@
+                            @if (!string.IsNullOrEmpty(theme.Author) || !string.IsNullOrEmpty(theme.Version) || !string.IsNullOrEmpty(theme.License))
+                            {
+                                <div class="border-top pt-3 mb-3">
+                                    @if (!string.IsNullOrEmpty(theme.Author))
+                                    {
+                                        <p class="small mb-1"><strong>By:</strong> @theme.Author</p>
+                                    }
+                                    @if (!string.IsNullOrEmpty(theme.Version))
+                                    {
+                                        <p class="small mb-1"><strong>v</strong> @theme.Version</p>
+                                    }
+                                    @if (!string.IsNullOrEmpty(theme.License))
+                                    {
+                                        <p class="small text-muted">@theme.License</p>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        @* Action Buttons *@
+                        <div class="card-footer border-top">
+                            <div class="d-grid gap-2">
+                                @if (!isActive)
+                                {
+                                    <form method="post" asp-page-handler="ActivateTheme" class="m-0">
+                                        <input type="hidden" name="themeId" value="@theme.Id" />
+                                        <button type="submit" class="btn btn-success w-100 fw-bold">
+                                            <i class="bi bi-check-circle"></i> Activate
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-success w-100 fw-bold" disabled>
+                                        <i class="bi bi-check-circle-fill"></i> Currently Active
+                                    </button>
+                                }
+                            </div>
+                            
+                            @if (theme.Id != "framtidsdesign")
+                            {
+                                <div class="d-grid gap-2 mt-2">
+                                    <form method="post" asp-page-handler="DeleteTheme" class="m-0" onsubmit="return confirm('Are you sure you want to delete this theme?');">
+                                        <input type="hidden" name="themeId" value="@theme.Id" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <strong>No themes found.</strong> Upload a theme using the form above.
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .upload-zone {
+        border: 2px dashed #667eea;
+        border-radius: 0.5rem;
+        background-color: rgba(26, 31, 58, 0.6);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--text-light);
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+        background-color: rgba(102, 126, 234, 0.15);
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.3);
+    }
+
+    .upload-zone p,
+    .upload-zone i {
+        color: inherit;
+    }
+
+    .theme-card {
+        transition: all 0.3s ease;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .theme-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .theme-preview {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .theme-preview img {
+        width: 100%;
+        transition: transform 0.3s ease;
+    }
+
+    .theme-card:hover .theme-preview img {
+        transform: scale(1.05);
+    }
+
+    .color-swatch {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-swatch:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-footer {
+        padding: 1rem !important;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+    }
+</style>
+
+<script>
+    // Drag and drop functionality
+    const uploadZone = document.getElementById('uploadZone');
+    const themeFile = document.getElementById('themeFile');
+    const themeUploadForm = document.getElementById('themeUploadForm');
+
+    if (uploadZone && themeFile) {
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                themeFile.files = files;
+                themeUploadForm.submit();
+            }
+        });
+
+        uploadZone.addEventListener('click', () => {
+            themeFile.click();
+        });
+
+        themeFile.addEventListener('change', () => {
+            if (themeFile.files.length > 0) {
+                themeUploadForm.submit();
+            }
+        });
+    }
+</script>

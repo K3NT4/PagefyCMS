@@ -1,0 +1,288 @@
+@page
+@model PagefyCMS.Pages.Admin.Settings.AddonsModel
+@{
+    ViewData["Title"] = "Addon Manager";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="mb-2"><i class="bi bi-puzzle-fill"></i> Addon Manager</h1>
+            <p class="text-muted">Install, enable and manage addons for your website</p>
+        </div>
+        <div class="col-auto">
+            <a href="/Admin/Settings/InstallAddon" class="btn btn-primary btn-lg">
+                <i class="bi bi-plus-circle"></i> Install New Addon
+            </a>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-@(Model.MessageIsError ? "danger" : "success") alert-dismissible fade show" role="alert">
+            @Model.Message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model.LoadedAddons.Count == 0)
+    {
+        <div class="card border-0">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-inbox display-4 text-muted mb-3"></i>
+                <h5>No Addons Installed</h5>
+                <p class="text-muted mb-3">Add addon files to the <code>/Addons</code> folder or install one now</p>
+                <a href="/Admin/Settings/InstallAddon" class="btn btn-primary">
+                    <i class="bi bi-download"></i> Install an Addon
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var addon in Model.LoadedAddons)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card addon-card h-100 @(addon.IsEnabled ? "border-success border-2" : "border-light")">
+                        <div class="card-header bg-@(addon.IsEnabled ? "success" : "secondary") text-white">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h5 class="mb-0">@addon.Name</h5>
+                                </div>
+                                <div class="toggle-badge">
+                                    @if (addon.IsEnabled)
+                                    {
+                                        <span class="badge bg-light text-success fs-6">✓ Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-secondary fs-6">○ Inactive</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p class="card-text text-muted mb-3">@addon.Description</p>
+                            
+                            <div class="addon-metadata">
+                                <div class="mb-2">
+                                    <small class="text-muted"><strong>Version:</strong> @addon.Version</small>
+                                </div>
+                                <div class="mb-2">
+                                    <small class="text-muted"><strong>Author:</strong> @addon.Author</small>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block" style="word-break: break-all;"><strong>ID:</strong> <code>@addon.Id</code></small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer border-top">
+                            <div class="d-grid">
+                                <form method="post" class="m-0">
+                                    @if (addon.IsEnabled)
+                                    {
+                                        <button type="submit" asp-page-handler="Disable" asp-route-addonId="@addon.Id" 
+                                                class="btn btn-outline-warning fw-bold">
+                                            <i class="bi bi-pause-circle"></i> Disable
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" asp-page-handler="Enable" asp-route-addonId="@addon.Id" 
+                                                class="btn btn-success fw-bold">
+                                            <i class="bi bi-play-circle"></i> Enable
+                                        </button>
+                                    }
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <hr class="my-5" />
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header border-bottom">
+                    <h5 class="mb-0"><i class="bi bi-code-square"></i> Create Your Own Addon</h5>
+                </div>
+                <div class="card-body">
+                    <p>Addons are a flexible system to extend PagefyCMS without modifying core code. Use hooks to integrate with the system lifecycle.</p>
+
+                    <h6 class="mt-4 mb-3"><i class="bi bi-1-circle"></i> Step 1: Create addon class</h6>
+                    <pre><code class="language-csharp">using PagefyCMS.Addons;
+
+public class MyAddon : HookableAddon
+{
+    public override string Id => "com.example.myaddon";
+    public override string Name => "My Addon";
+    public override string Description => "What this addon does";
+    public override string Version => "1.0.0";
+    public override string Author => "Your Name";
+
+    public override IEnumerable&lt;AddonHook&gt; SupportedHooks => new[]
+    {
+        AddonHook.BeforePageRender,
+        AddonHook.SystemInitialize
+    };
+
+    public override async Task ExecuteHookAsync(HookContext context)
+    {
+        // Your logic here
+        await Task.CompletedTask;
+    }
+}</code></pre>
+
+                    <h6 class="mt-4 mb-3"><i class="bi bi-2-circle"></i> Step 2: Register the addon</h6>
+                    <p>Add to <code>Program.cs</code>:</p>
+                    <pre><code class="language-csharp">var addonManager = app.Services.GetRequiredService&lt;AddonManager&gt;();
+addonManager.RegisterAddon(new MyAddon());</code></pre>
+
+                    <h6 class="mt-4 mb-3"><i class="bi bi-3-circle"></i> Available Hooks</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Hook Name</th>
+                                    <th>When It's Called</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>BeforeHomepageRender</code></td>
+                                    <td>Before homepage is displayed</td>
+                                </tr>
+                                <tr>
+                                    <td><code>AfterHomepageRender</code></td>
+                                    <td>After homepage is displayed</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BeforePageRender</code></td>
+                                    <td>Before a page is displayed</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BeforeArticleRender</code></td>
+                                    <td>Before an article is displayed</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BeforeArticleSave</code></td>
+                                    <td>Before an article is saved</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BeforePageSave</code></td>
+                                    <td>Before a page is saved</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BeforeMediaSave</code></td>
+                                    <td>Before media is uploaded</td>
+                                </tr>
+                                <tr>
+                                    <td><code>BeforeMediaDelete</code></td>
+                                    <td>Before media is deleted</td>
+                                </tr>
+                                <tr>
+                                    <td><code>AdminMenuItems</code></td>
+                                    <td>Add custom admin menu items</td>
+                                </tr>
+                                <tr>
+                                    <td><code>SystemInitialize</code></td>
+                                    <td>On system startup</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .addon-card {
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .addon-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .addon-card .card-header {
+        padding: 1.25rem;
+    }
+
+    .addon-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .addon-card .card-footer {
+        padding: 1rem;
+    }
+
+    .addon-metadata small {
+        line-height: 1.8;
+    }
+
+    .addon-metadata code {
+        background-color: #f5f5f5;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.85em;
+    }
+
+    code {
+        background-color: rgba(45, 53, 97, 0.5);
+        color: #a0d8ff;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 0.9em;
+    }
+
+    pre {
+        background-color: rgba(26, 31, 58, 0.8);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        color: #e0e6ff;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-size: 0.85em;
+    }
+
+    .table-responsive {
+        border-radius: 5px;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        border-top: 1px solid rgba(102, 126, 234, 0.3);
+        font-weight: 600;
+        background-color: rgba(26, 31, 58, 0.6);
+        color: var(--text-light);
+    }
+
+    .toggle-badge {
+        animation: slideIn 0.3s ease;
+    }
+
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+</style>

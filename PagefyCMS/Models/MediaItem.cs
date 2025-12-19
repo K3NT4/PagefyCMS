@@ -1,19 +1,47 @@
-﻿namespace PagefyCMS.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PagefyCMS.Models
 {
     public class MediaItem
     {
         public Guid Id { get; set; }
-        public string Filename { get; set; }
-        public string Slug { get; set; }
-        public string Title { get; set; }  // Namn på bilden
-        public string AltText { get; set; }  // Alt-text för SEO
-        public string Description { get; set; }  // (Valfritt, kan användas för längre beskrivningar i framtiden)
-        public string OriginalPath { get; set; }
-        public string WebpSmall { get; set; }
-        public string WebpMedium { get; set; }
-        public string WebpLarge { get; set; }
-        public DateTime UploadedAt { get; set; }
-        public string GalleryGroup { get; set; }
-    }
 
+        [Required]
+        [StringLength(500)]
+        public string Filename { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(500)]
+        public string Slug { get; set; } = string.Empty;
+
+        [StringLength(255)]
+        public string Title { get; set; } = string.Empty;  // Namn på bilden
+
+        [StringLength(500)]
+        public string AltText { get; set; } = string.Empty;  // Alt-text för SEO
+
+        [StringLength(1000)]
+        public string Description { get; set; } = string.Empty;  // (Valfritt, kan användas för längre beskrivningar i framtiden)
+
+        [Required]
+        [StringLength(500)]
+        public string OriginalPath { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(500)]
+        public string WebpSmall { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(500)]
+        public string WebpMedium { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(500)]
+        public string WebpLarge { get; set; } = string.Empty;
+
+        public DateTime UploadedAt { get; set; }
+
+        [StringLength(255)]
+        public string? GalleryGroup { get; set; }
+    }
 }
