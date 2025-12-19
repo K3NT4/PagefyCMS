@@ -20,7 +20,7 @@ Byggt med fokus på enkel kodstruktur, utbyggnadsmöjligheter och modern webbtek
 
 ---
 
-## 📂 Projektstruktur
+## � Projektstruktur
 
 ```text
 controller/                    Kontroller för sidhantering, artiklar och media
@@ -85,7 +85,7 @@ LICENSE                        Licensfil (MIT)
 
 ---
 
-## 🛠️ Framtida Utveckling
+## �️ Framtida Utveckling
 
 - Fler färdiga plugins (t.ex. kontaktformulär, gästbok)  
 - Möjlighet att importera bilder direkt från Unsplash/Pexels  
