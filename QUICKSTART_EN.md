@@ -130,7 +130,7 @@ PagefyCMS/
 └── Data/                     → Database configuration
 ```
 
-**Full documentation:** [Main README](README_EN.md)
+**Full documentation:** [Main README](README.md)
 
 ---
 
@@ -267,9 +267,9 @@ dotnet run
 ## 📚 Documentation
 
 **Start here:**
-- [Main README](README_EN.md) - Complete overview
-- [Themes Guide](THEMES_GUIDE_EN.md) - Theme system details
-- [Addons Guide](ADDONS_GUIDE_EN.md) - Addon development
+- [Main README](README.md) - Complete overview
+- [Themes Guide](THEMES_GUIDE.md) - Theme system details
+- [Addons Guide](ADDONS_GUIDE.md) - Addon development
 
 **Additional Resources:**
 - [ASP.NET Core Docs](https://docs.microsoft.com/en-us/aspnet/core/)
@@ -282,7 +282,7 @@ dotnet run
 
 - **GitHub Issues:** [Report bugs](https://github.com/K3NT4/PagefyCMS/issues)
 - **Discussions:** [Ask questions](https://github.com/K3NT4/PagefyCMS/discussions)
-- **Documentation:** [Full guides](README_EN.md)
+- **Documentation:** [Full guides](README.md)
 
 ---
 
@@ -319,4 +319,4 @@ After getting started, explore:
 
 **You're ready to build amazing websites with PagefyCMS! 🚀**
 
-For more information, see [Main README](README_EN.md)
+For more information, see [Main README](README.md)

@@ -1,7 +1,7 @@
 # Themes Guide - Complete Theme System Documentation
 
 **Language:** English  
-**For overview:** See [Main README](README_EN.md)
+**For overview:** See [Main README](../README.md)
 
 ---
 
@@ -764,8 +764,8 @@ And modify colors in `style.css`:
 
 ## Additional Resources
 
-- [Main README](README_EN.md)
-- [Addons Guide](ADDONS_GUIDE_EN.md)
+- [Main README](../README.md)
+- [Addons Guide](../ADDONS_GUIDE.md)
 - [CSS Tricks](https://css-tricks.com/)
 - [MDN CSS Docs](https://developer.mozilla.org/en-US/docs/Web/CSS)
 - [Color Picker](https://htmlcolorcodes.com/)

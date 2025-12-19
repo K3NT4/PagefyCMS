@@ -1,397 +1,544 @@
-# PagefyCMS Addon System
+# Addons Guide - Complete Developer Documentation
 
-## 📦 Överblick
-
-PagefyCMS har nu ett komplett **addon/plugin-system** som låter dig utöka funktionaliteten utan att ändra kärnkoden. Addons är modulär, återanvändbar och lätt att utveckla.
-
----
-
-## 🎯 Grundläggande Koncept
-
-### 1. **IAddon Interface**
-Alla addons implementerar `IAddon` och ärver från `BaseAddon`:
-
-```csharp
-public class MyAddon : BaseAddon
-{
-    public override string Id => "com.example.myaddon";
-    public override string Name => "Min Addon";
-    public override string Description => "Vad addonen gör";
-    public override string Version => "1.0.0";
-    public override string Author => "Din Namn";
-
-    public override async Task InitializeAsync()
-    {
-        // Körs när addonen aktiveras
-        await base.InitializeAsync();
-    }
-
-    public override async Task ShutdownAsync()
-    {
-        // Körs när addonen deaktiveras
-        await base.ShutdownAsync();
-    }
-}
-```
-
-### 2. **Hook System**
-Addons kan "koppla in" sig vid specifika eventos i systemet via **hooks**:
-
-```csharp
-public class MyHookAddon : HookableAddon
-{
-    public override IEnumerable<AddonHook> SupportedHooks => new[]
-    {
-        AddonHook.BeforePageSave,
-        AddonHook.AfterPageRender
-    };
-
-    public override async Task ExecuteHookAsync(HookContext context)
-    {
-        if (context.Hook == AddonHook.BeforePageSave)
-        {
-            // Gör något innan en sida sparas
-        }
-    }
-}
-```
-
-### 3. **AddonManager**
-Hanterar inladdning, registrering och körning av addons:
-
-```csharp
-var addonManager = app.Services.GetRequiredService<AddonManager>();
-await addonManager.LoadAddonsAsync();
-addonManager.RegisterAddon(new MyAddon());
-var addon = addonManager.GetAddon("com.example.myaddon");
-```
+**Language:** English  
+**For overview:** See [Main README](../README.md)
 
 ---
 
-## 🚀 Steg-för-steg: Skapa En Addon
+## Table of Contents
 
-### Steg 1: Skapa addon-klassen
-
-```csharp
-using PagefyCMS.Addons;
-
-public class GreeterAddon : HookableAddon
-{
-    public override string Id => "com.example.greeter";
-    public override string Name => "Greeter";
-    public override string Description => "Hälsar användare på sidorna";
-    public override string Version => "1.0.0";
-    public override string Author => "Min Namn";
-
-    public override IEnumerable<AddonHook> SupportedHooks => new[]
-    {
-        AddonHook.BeforeHomepageRender
-    };
-
-    public override async Task ExecuteHookAsync(HookContext context)
-    {
-        if (context.Hook == AddonHook.BeforeHomepageRender)
-        {
-            // Lägg till data som sedan visas på sidan
-            context.Data["Greeting"] = "Välkommen till PagefyCMS!";
-        }
-        await Task.CompletedTask;
-    }
-}
-```
-
-### Steg 2: Registrera addonen
-
-I `Program.cs`, efter `app.Build()`:
-
-```csharp
-var addonManager = app.Services.GetRequiredService<AddonManager>();
-addonManager.RegisterAddon(new GreeterAddon());
-```
-
-### Steg 3: Använd addonen i dina sidor
-
-```csharp
-// I en PageModel
-public class IndexModel : PageModel
-{
-    private readonly AddonManager _addonManager;
-
-    public IndexModel(AddonManager addonManager)
-    {
-        _addonManager = addonManager;
-    }
-
-    public async Task OnGet()
-    {
-        var context = new HookContext { Hook = AddonHook.BeforeHomepageRender };
-        await _addonManager.ExecuteHookAsync(context);
-        
-        // context.Data["Greeting"] innehåller nu "Välkommen till PagefyCMS!"
-    }
-}
-```
+1. [Getting Started](#getting-started)
+2. [Addon Architecture](#addon-architecture)
+3. [Creating Your First Addon](#creating-your-first-addon)
+4. [Addon Hooks](#addon-hooks)
+5. [Advanced Features](#advanced-features)
+6. [Examples](#examples)
+7. [Troubleshooting](#troubleshooting)
 
 ---
 
-## 📌 Tillgängliga Hooks
+## Getting Started
 
-| Hook | Beskrivning | Data Tillgängligt |
-|------|-------------|------------------|
-| `BeforeHomepageRender` | Innan startsida renderas | Page content |
-| `AfterHomepageRender` | Efter startsida renderas | Rendered HTML |
-| `BeforePageRender` | Innan sida renderas | Page content |
-| `AfterPageRender` | Efter sida renderas | Rendered HTML |
-| `BeforeArticleRender` | Innan artikel renderas | Article content |
-| `AfterArticleRender` | Efter artikel renderas | Rendered HTML |
-| `BeforeArticleSave` | Innan artikel sparas i DB | Article model |
-| `BeforePageSave` | Innan sida sparas i DB | Page model |
-| `BeforeMediaSave` | Innan media sparas i DB | Media item |
-| `BeforeMediaDelete` | Innan media tas bort | Media ID |
-| `AdminMenuItems` | Lägg till meny-items | Admin menu |
-| `SystemInitialize` | Vid systemstart | System info |
+### What is an Addon?
 
----
+An addon is a self-contained module that extends PagefyCMS functionality without modifying core code. Addons can:
+- Hook into system events
+- Add custom pages and routes
+- Integrate with external services
+- Modify data before/after operations
+- Run background tasks
 
-## 🎨 Exempel-Addons
+### Why Use Addons?
 
-### SEO Addon
-```csharp
-public class SeoAddon : HookableAddon
-{
-    public override string Id => "com.pagefy.seo";
-    public override string Name => "SEO Optimizer";
-    public override IEnumerable<AddonHook> SupportedHooks => new[] 
-    { 
-        AddonHook.BeforePageRender,
-        AddonHook.BeforeArticleRender 
-    };
-
-    public override async Task ExecuteHookAsync(HookContext context)
-    {
-        // Lägg till automatiska meta-tags
-        context.Data["MetaDescription"] = GenerateDescription();
-        context.Data["MetaKeywords"] = GenerateKeywords();
-        await Task.CompletedTask;
-    }
-}
-```
-
-### Analytics Addon
-```csharp
-public class AnalyticsAddon : HookableAddon
-{
-    public override string Id => "com.example.analytics";
-    public override string Name => "Analytics Tracker";
-    public override IEnumerable<AddonHook> SupportedHooks => new[] 
-    { 
-        AddonHook.AfterPageRender,
-        AddonHook.AfterArticleRender 
-    };
-
-    public override async Task ExecuteHookAsync(HookContext context)
-    {
-        // Lägg till tracking-kod
-        context.Data["TrackingCode"] = "<script>...</script>";
-        await Task.CompletedTask;
-    }
-}
-```
-
-### Cache Addon
-```csharp
-public class CacheAddon : HookableAddon
-{
-    private Dictionary<string, object> _cache = new();
-
-    public override IEnumerable<AddonHook> SupportedHooks => new[] 
-    { 
-        AddonHook.BeforePageRender,
-        AddonHook.BeforeArticleRender 
-    };
-
-    public override async Task ExecuteHookAsync(HookContext context)
-    {
-        var key = GenerateCacheKey(context);
-        if (_cache.TryGetValue(key, out var cached))
-        {
-            context.Data["Cached"] = cached;
-        }
-        await Task.CompletedTask;
-    }
-}
-```
+- **Safe** - Core system remains unchanged
+- **Maintainable** - Updates don't break addons
+- **Reusable** - Share addons across projects
+- **Easy to Enable/Disable** - No code changes required
+- **Isolated** - Each addon is independent
 
 ---
 
-## 🔧 Avancerade Funktioner
+## Addon Architecture
 
-### Addon-Konfiguration
+### Folder Structure
 
-Skapa en `addon.json` i addon-mappen:
+```
+PagefyCMS/
+└── Addons/
+    ├── MyAddon/
+    │   ├── MyAddon.cs           # Main addon class
+    │   └── addon.json           # Metadata file
+    ├── AnotherAddon/
+    │   ├── AnotherAddon.cs
+    │   └── addon.json
+    └── ExampleAddons/           # Pre-built examples
+        ├── ActivityLogAddon.cs
+        ├── SeoAddon.cs
+        └── CompleteExampleAddons.cs
+```
+
+### Addon Metadata (addon.json)
 
 ```json
 {
-  "id": "com.example.myaddon",
-  "name": "Min Addon",
-  "enabled": true,
-  "settings": {
-    "option1": "värde1",
-    "option2": "värde2"
-  }
+  "id": "unique-addon-id",
+  "name": "Display Name",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "What this addon does",
+  "enabled": false
 }
 ```
 
-Läs konfiguration i din addon:
+**Fields:**
+- `id` - Unique identifier (lowercase, no spaces)
+- `name` - Display name in admin panel
+- `version` - Semantic versioning (major.minor.patch)
+- `author` - Author name or organization
+- `description` - Brief description of functionality
+- `enabled` - Initial enabled state (false by default)
 
-```csharp
-var config = await File.ReadAllTextAsync("addon.json");
-var options = JsonConvert.DeserializeObject<AddonConfig>(config);
+---
+
+## Creating Your First Addon
+
+### Step 1: Create Addon Directory
+
+```bash
+cd PagefyCMS/Addons
+mkdir MyFirstAddon
+cd MyFirstAddon
 ```
 
-### Addon-Beroenden
+### Step 2: Create addon.json
 
-Om en addon behöver en annan addon:
+```json
+{
+  "id": "my-first-addon",
+  "name": "My First Addon",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "My first addon for PagefyCMS",
+  "enabled": false
+}
+```
+
+### Step 3: Create Addon Class
+
+**File: MyFirstAddon.cs**
 
 ```csharp
-public class DependentAddon : BaseAddon
+using PagefyCMS.Addons;
+using System;
+
+namespace PagefyCMS.Addons.MyFirstAddon
 {
-    public override async Task InitializeAsync()
+    public class MyFirstAddon : BaseAddon
     {
-        var requiredAddon = _addonManager.GetAddon("com.example.required");
-        if (requiredAddon == null)
-            throw new Exception("Krävs com.example.required addon");
+        public MyFirstAddon() 
+            : base(
+                "my-first-addon",
+                "My First Addon",
+                "1.0.0",
+                "Your Name"
+            )
+        {
+        }
+
+        public override void OnInit()
+        {
+            Console.WriteLine("My First Addon initialized!");
+        }
+
+        public override void OnPostPageCreate(dynamic page)
+        {
+            Console.WriteLine($"New page created: {page.Title}");
+        }
+    }
+}
+```
+
+### Step 4: Enable in Admin Panel
+
+1. Go to `Admin → Settings → Addons`
+2. Find "My First Addon" in the list
+3. Click the "Enable" button
+4. Check console output to verify initialization
+
+---
+
+## Addon Hooks
+
+Hooks are methods that execute at specific points in the application lifecycle.
+
+### Available Hooks
+
+#### 1. **OnInit()**
+Executes when the addon is loaded.
+
+```csharp
+public override void OnInit()
+{
+    // Initialize addon resources
+    // Load configuration
+    // Register event listeners
+    Logger.Log("Addon initialized");
+}
+```
+
+#### 2. **OnPostPageCreate(dynamic page)**
+Executes after a new page is created.
+
+```csharp
+public override void OnPostPageCreate(dynamic page)
+{
+    // Log page creation
+    // Send notifications
+    // Generate SEO metadata
+    var pageTitle = page.Title;
+    var pageSlug = page.Slug;
+}
+```
+
+**Page Object Properties:**
+- `Id` - Page ID
+- `Title` - Page title
+- `Slug` - URL-friendly slug
+- `Content` - Page content HTML
+- `CreatedAt` - Creation timestamp
+- `ShowInMenu` - Display in navigation
+
+#### 3. **OnPostPageUpdate(dynamic page)**
+Executes after a page is updated.
+
+```csharp
+public override void OnPostPageUpdate(dynamic page)
+{
+    // Log page changes
+    // Invalidate cache
+    // Update search index
+}
+```
+
+#### 4. **OnPostArticleCreate(dynamic article)**
+Executes after a new article is published.
+
+```csharp
+public override void OnPostArticleCreate(dynamic article)
+{
+    // Send publication notifications
+    // Schedule social media posts
+    // Update feeds
+    var headline = article.Headline;
+    var publishedAt = article.PublishedAt;
+}
+```
+
+**Article Object Properties:**
+- `Id` - Article ID
+- `Headline` - Article title
+- `Slug` - URL-friendly slug
+- `Content` - Article content HTML
+- `PublishedAt` - Publication date
+
+#### 5. **OnPostArticleUpdate(dynamic article)**
+Executes after an article is updated.
+
+```csharp
+public override void OnPostArticleUpdate(dynamic article)
+{
+    // Log updates
+    // Notify subscribers of changes
+}
+```
+
+#### 6. **OnMediaUpload(dynamic media)**
+Executes after media is uploaded.
+
+```csharp
+public override void OnMediaUpload(dynamic media)
+{
+    // Scan for viruses
+    // Extract metadata
+    // Generate thumbnails
+    // Optimize images
+    var filename = media.Filename;
+    var title = media.Title;
+}
+```
+
+**Media Object Properties:**
+- `Id` - Media ID
+- `Filename` - Original filename
+- `Title` - Display title
+- `AltText` - Alt text for accessibility
+- `UploadedAt` - Upload timestamp
+- `WebpSmall` - Small optimized version
+- `WebpMedium` - Medium optimized version
+- `WebpLarge` - Large optimized version
+- `GalleryGroup` - Gallery category
+
+---
+
+## Advanced Features
+
+### Using Dependency Injection
+
+Access system services in your addon:
+
+```csharp
+using PagefyCMS.Data;
+using Microsoft.AspNetCore.Hosting;
+
+public class AdvancedAddon : BaseAddon
+{
+    private readonly PagefyDbContext _context;
+    private readonly IWebHostEnvironment _env;
+
+    public AdvancedAddon(PagefyDbContext context, IWebHostEnvironment env)
+        : base("advanced-addon", "Advanced Addon", "1.0.0", "Author")
+    {
+        _context = context;
+        _env = env;
+    }
+
+    public override void OnPostPageCreate(dynamic page)
+    {
+        // Access database
+        var pageCount = _context.Pages.Count();
         
-        await base.InitializeAsync();
+        // Get environment info
+        var basePath = _env.WebRootPath;
     }
 }
 ```
 
-### Datadelning Mellan Addons
+### Accessing the Database
 
 ```csharp
-public class SharedDataAddon : BaseAddon
-{
-    public static Dictionary<string, object> SharedData = new();
+using PagefyCMS.Models;
+using PagefyCMS.Data;
 
-    public override async Task InitializeAsync()
+public override void OnPostPageCreate(dynamic page)
+{
+    // Create custom settings for this page
+    var setting = new CmsSetting
     {
-        SharedData["key"] = "value";
-        await base.InitializeAsync();
-    }
+        Key = $"page-{page.Id}-views",
+        Value = "0",
+        ActiveTheme = null
+    };
+    
+    _context.Settings.Add(setting);
+    _context.SaveChanges();
 }
 ```
 
----
-
-## 📊 Admin-Interface
-
-Gå till `/Admin/Settings/Addons` för att:
-- ✅ Se alla installerade addons
-- ✅ Aktivera/deaktivera addons
-- ✅ Se addon-information
-- ✅ Läsa dokumentation
-
----
-
-## 🔐 Säkerhet
-
-### Addon Validering
-```csharp
-public abstract class ValidatedAddon : BaseAddon
-{
-    public override async Task InitializeAsync()
-    {
-        if (!ValidateAddon())
-            throw new UnauthorizedAccessException("Addon validering misslyckades");
-        await base.InitializeAsync();
-    }
-
-    protected virtual bool ValidateAddon() => true;
-}
-```
-
-### Begränsad Åtkomst
-Addons bör inte ha tillgång till känslig data utan autentisering:
+### Logging
 
 ```csharp
-public override async Task ExecuteHookAsync(HookContext context)
-{
-    if (string.IsNullOrEmpty(context.UserId))
-        return; // Ignorera om ingen användare är inloggad
+using System;
 
-    // Fortsätt med autentiserad logik
-    await Task.CompletedTask;
+public override void OnInit()
+{
+    Console.WriteLine("✓ Addon Started");
+}
+
+public override void OnPostPageCreate(dynamic page)
+{
+    Console.WriteLine($"📄 New page: {page.Title}");
+}
+
+public override void OnMediaUpload(dynamic media)
+{
+    Console.WriteLine($"🖼️ Media uploaded: {media.Filename}");
 }
 ```
 
----
-
-## 🧪 Testa Din Addon
+### Conditional Execution
 
 ```csharp
-[TestClass]
-public class MyAddonTests
+public override void OnPostArticleCreate(dynamic article)
 {
-    [TestMethod]
-    public async Task TestAddonInitialization()
+    // Only notify if article contains "important" tag
+    if (article.Content.Contains("important"))
     {
-        var addon = new MyAddon();
-        await addon.InitializeAsync();
-        
-        Assert.IsTrue(addon.IsEnabled);
+        SendNotification($"Important article published: {article.Headline}");
+    }
+}
+
+private void SendNotification(string message)
+{
+    // Email, Slack, webhook, etc.
+    Console.WriteLine($"NOTIFICATION: {message}");
+}
+```
+
+---
+
+## Examples
+
+### Example 1: SEO Addon
+
+Automatically generates SEO metadata:
+
+```csharp
+public class SeoAddon : BaseAddon
+{
+    public SeoAddon() : base("seo-addon", "SEO Addon", "1.0.0", "Team")
+    {
     }
 
-    [TestMethod]
-    public async Task TestHookExecution()
+    public override void OnPostPageCreate(dynamic page)
     {
-        var addon = new MyAddon();
-        var context = new HookContext { Hook = AddonHook.BeforePageSave };
-        
-        await addon.ExecuteHookAsync(context);
-        
-        Assert.IsTrue(context.Data.ContainsKey("ExpectedKey"));
+        var setting = new CmsSetting
+        {
+            Key = $"seo-page-{page.Id}",
+            Value = GenerateMetaDescription(page.Content),
+            ActiveTheme = null
+        };
+        // Save to database
+    }
+
+    private string GenerateMetaDescription(string content)
+    {
+        return content.Length > 155 
+            ? content.Substring(0, 155) + "..." 
+            : content;
+    }
+}
+```
+
+### Example 2: Activity Logger
+
+Logs all actions:
+
+```csharp
+public class ActivityLogAddon : BaseAddon
+{
+    private readonly PagefyDbContext _context;
+
+    public ActivityLogAddon(PagefyDbContext context)
+        : base("activity-log", "Activity Logger", "1.0.0", "Team")
+    {
+        _context = context;
+    }
+
+    public override void OnPostPageCreate(dynamic page)
+    {
+        LogActivity("PAGE_CREATED", $"Page '{page.Title}' created");
+    }
+
+    public override void OnPostArticleCreate(dynamic article)
+    {
+        LogActivity("ARTICLE_PUBLISHED", $"Article '{article.Headline}' published");
+    }
+
+    private void LogActivity(string action, string description)
+    {
+        var log = new CmsSetting
+        {
+            Key = $"log-{DateTime.Now:yyyy-MM-dd-HH-mm-ss}",
+            Value = $"{action}: {description}",
+            ActiveTheme = null
+        };
+        _context.Settings.Add(log);
+        _context.SaveChanges();
+    }
+}
+```
+
+### Example 3: Email Notifier
+
+Sends email on article creation:
+
+```csharp
+using System.Net.Mail;
+
+public class EmailNotifierAddon : BaseAddon
+{
+    public EmailNotifierAddon()
+        : base("email-notifier", "Email Notifier", "1.0.0", "Team")
+    {
+    }
+
+    public override void OnPostArticleCreate(dynamic article)
+    {
+        SendEmail(
+            "admin@example.com",
+            $"New Article: {article.Headline}",
+            $"A new article was published: {article.Headline}"
+        );
+    }
+
+    private void SendEmail(string to, string subject, string body)
+    {
+        try
+        {
+            using (var client = new SmtpClient("localhost"))
+            {
+                var message = new MailMessage("noreply@pagefycms.com", to)
+                {
+                    Subject = subject,
+                    Body = body
+                };
+                client.Send(message);
+                Console.WriteLine($"✉️ Email sent to {to}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Email error: {ex.Message}");
+        }
     }
 }
 ```
 
 ---
 
-## 📦 Distribuera Din Addon
+## Troubleshooting
 
-1. Skapa en mapp `/Addons/MyAddon/`
-2. Lägg din addon-kod där
-3. Lägg till `addon.json` med metadata
-4. Zipar mappen
-5. Distribuera via PagefyCMS Addon Marketplace (framtida feature)
+### Addon Not Appearing in Admin Panel
+
+1. Verify `addon.json` exists in addon folder
+2. Check JSON syntax (use JSON validator)
+3. Ensure folder is in `PagefyCMS/Addons/`
+4. Restart application
+5. Clear browser cache
+
+### Addon Not Initializing
+
+1. Check console for error messages
+2. Verify class inherits from `BaseAddon`
+3. Check constructor parameters match available services
+4. Verify `OnInit()` doesn't throw exceptions
+
+### Hook Not Firing
+
+1. Verify addon is enabled in admin panel
+2. Check hook method name is correct
+3. Verify parameters match expected types
+4. Add logging to confirm execution
+
+### Database Errors
+
+1. Check `_context` is injected correctly
+2. Verify table/model exists
+3. Check database migrations are up-to-date
+4. Review Entity Framework Core documentation
 
 ---
 
-## ⚠️ Bästa Metoder
+## Best Practices
 
-1. **Namn addons unikt** - Använd omvänd domain-notation: `com.yourcompany.featurename`
-2. **Dokumentera hookar** - Berätta vilka hooks addonen använder
-3. **Hantera fel** - Använd try-catch i ExecuteHookAsync
-4. **Logga aktiviteter** - Använd AddressLogging för debugging
-5. **Versionshantering** - Följa semver (1.0.0)
-6. **Konfigurering** - Låt addons konfigureras via appsettings.json
-7. **Testning** - Skriv unit-tests för addons
-8. **Performance** - Optimera hook-exekvering
+### Do's ✅
+
+- ✅ Use try-catch for error handling
+- ✅ Log important actions
+- ✅ Keep addons focused and single-purpose
+- ✅ Follow C# naming conventions
+- ✅ Document your addon's behavior
+- ✅ Test thoroughly before deploying
+
+### Don'ts ❌
+
+- ❌ Don't modify core system files
+- ❌ Don't make synchronous HTTP calls
+- ❌ Don't access private/internal properties
+- ❌ Don't ignore exceptions silently
+- ❌ Don't create infinite loops
+- ❌ Don't hardcode sensitive data
 
 ---
 
-## 🚫 Vanliga Misstag
+## Additional Resources
 
-❌ **Inte hantera exceptions** - Kan krascha systemet
-❌ **Lång-körande operationer i hooks** - Blockerar rendering
-❌ **Hårdkodade värden** - Använd configuration istället
-❌ **Ingen logging** - Svårt att debugga
-❌ **Ignorera security** - Validera alltid användarinput
+- [PagefyCMS Main Documentation](../README.md)
+- [Themes Guide](../PagefyCMS/THEMES_GUIDE.md)
+- [ASP.NET Core Dependency Injection](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection)
+- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
 
 ---
 
-## 📞 Support & Resources
-
-- 📚 [Addon Dokumentation](../ADDONS.md)
-- 🔗 [Interface References](../Addons/)
-- 💬 [GitHub Discussions](https://github.com/yourrepo/discussions)
+**Last Updated:** December 2025  
+**Maintained by:** PagefyCMS Community
