@@ -2,33 +2,33 @@
 @model PagefyCMS.Pages.Admin.Settings.SettingsModel
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Inställningar";
+    ViewData["Title"] = "Settings";
 }
 
 <div class="container">
-    <h2><i class="bi bi-gear"></i> Sidinställningar</h2>
+    <h2><i class="bi bi-gear"></i> Site Settings</h2>
 
     @if (Model.Saved)
     {
-        <div class="alert alert-success"><i class="bi bi-check-circle"></i> Inställningarna sparades!</div>
+        <div class="alert alert-success"><i class="bi bi-check-circle"></i> Settings saved successfully!</div>
     }
 
     <form method="post">
         <div class="row">
-            <!-- Basala inställningar -->
+            <!-- Basic Settings -->
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-header">
-                        <i class="bi bi-info-circle"></i> Grundläggande
+                        <i class="bi bi-info-circle"></i> Basic Settings
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="siteTitle" class="form-label">Sidans namn</label>
+                            <label for="siteTitle" class="form-label">Site Name</label>
                             <input type="text" id="siteTitle" name="SiteTitle" value="@Model.SiteTitle" class="form-control" required />
                         </div>
 
                         <div class="mb-3">
-                            <label for="editorType" class="form-label">Val av editor</label>
+                            <label for="editorType" class="form-label">Editor Choice</label>
                             <select id="editorType" name="EditorType" class="form-select">
                                 <option value="tinymce" selected="@(Model.EditorType == "tinymce" ? "selected" : null)">TinyMCE</option>
                                 <option value="toastui" selected="@(Model.EditorType == "toastui" ? "selected" : null)">Toast UI Editor</option>
@@ -37,22 +37,22 @@
 
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="editorEnabled" name="EditorEnabled" value="true" @(Model.EditorEnabled ? "checked" : "") />
-                            <label class="form-check-label" for="editorEnabled">Aktivera editor på sidor och artiklar</label>
+                            <label class="form-check-label" for="editorEnabled">Enable editor for pages and articles</label>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tema-väljare -->
+            <!-- Theme Selector -->
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-header">
-                        <i class="bi bi-palette"></i> Tema
+                        <i class="bi bi-palette"></i> Theme
                     </div>
                     <div class="card-body">
-                        <label for="activeTheme" class="form-label">Välj tema för webbplatsen</label>
+                        <label for="activeTheme" class="form-label">Choose theme for website</label>
                         <select id="activeTheme" name="ActiveTheme" class="form-select mb-3" onchange="updateThemePreview(this.value)">
-                            <option value="site" selected="@(Model.ActiveTheme == "site" ? "selected" : null)">🎨 Framtidsdesign (Standard)</option>
+                            <option value="site" selected="@(Model.ActiveTheme == "site" ? "selected" : null)">🎨 Future Design (Default)</option>
                             <option value="neon-cyberpunk" selected="@(Model.ActiveTheme == "neon-cyberpunk" ? "selected" : null)">⚡ Neon Cyberpunk</option>
                             <option value="professional-midnight" selected="@(Model.ActiveTheme == "professional-midnight" ? "selected" : null)">💼 Professional Midnight</option>
                             <option value="news-hub" selected="@(Model.ActiveTheme == "news-hub" ? "selected" : null)">📰 News Hub</option>
@@ -64,14 +64,14 @@
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle"></i>
                             <small>
-                                <strong>Tema-guide:</strong><br>
-                                🎨 Framtidsdesign - Modernt tema med blå/lila gradienter<br>
-                                ⚡ Neon Cyberpunk - Futuristisk neon-design<br>
-                                💼 Professional - Klassisk för företag<br>
-                                📰 News Hub - Optimerad för nyhetswebbplats<br>
-                                🎮 Gaming Edge - För spel- och gaming-nyheter<br>
-                                ✨ Minimalist - Rent och enkelt<br>
-                                🌌 Aurora - Nordljus-inspirerad
+                                <strong>Theme Guide:</strong><br>
+                                🎨 Future Design - Modern theme with blue/purple gradients<br>
+                                ⚡ Neon Cyberpunk - Futuristic neon design<br>
+                                💼 Professional - Classic for business<br>
+                                📰 News Hub - Optimized for news website<br>
+                                🎮 Gaming Edge - For gaming and gaming news<br>
+                                ✨ Minimalist - Clean and simple<br>
+                                🌌 Aurora - Northern lights inspired
                             </small>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg">
-            <i class="bi bi-save"></i> Spara ändringar
+            <i class="bi bi-save"></i> Save Changes
         </button>
     </form>
 </div>
@@ -94,7 +94,7 @@
 
 <script>
 function updateThemePreview(theme) {
-    // Du kan senare implementera preview av tema här
-    console.log('Tema valt: ' + theme);
+    // You can later implement theme preview here
+    console.log('Theme selected: ' + theme);
 }
 </script>

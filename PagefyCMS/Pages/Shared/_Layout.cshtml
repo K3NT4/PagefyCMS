@@ -17,12 +17,327 @@
         var themeStylePath = $"~/themes/{activeThemeId}/style.css";
     }
     <link rel="stylesheet" href="@themeStylePath" asp-append-version="true" />
+    
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --sidebar-bg: var(--card-bg, #1a1f3a);
+            --header-height: 60px;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+            width: 100%;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color, #2d3561);
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            display: none;
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            height: calc(100vh - var(--header-height));
+            z-index: 999;
+        }
+
+        .sidebar.show {
+            display: block;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-light, #e0e6ff);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--accent-blue, #667eea);
+        }
+
+        .sidebar-menu-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--card-bg, #1a1f3a);
+            border-bottom: 1px solid var(--border-color, #2d3561);
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar {
+            height: var(--header-height);
+            padding: 0 !important;
+            background: transparent !important;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--accent-blue, #667eea) !important;
+        }
+
+        .navbar-toggler {
+            border-color: var(--text-muted, #a0a9c9) !important;
+        }
+
+        .navbar-dark .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23e0e6ff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-light, #e0e6ff) !important;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.4rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--accent-blue, #667eea) !important;
+        }
+
+        footer {
+            background: var(--card-bg, #1a1f3a);
+            border-top: 1px solid var(--border-color, #2d3561);
+            padding: 2rem 0;
+            margin-top: auto;
+            color: var(--text-muted, #a0a9c9);
+        }
+
+        footer a {
+            color: var(--accent-blue, #667eea);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--accent-pink, #f5576c);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h5 {
+            background: none;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+            color: var(--text-light, #e0e6ff);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color, #2d3561);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: linear-gradient(135deg, var(--accent-blue, #667eea) 0%, var(--accent-pink, #f5576c) 100%);
+            color: white !important;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light, #e0e6ff);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            display: block;
+            transition: color 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .sidebar-toggle:hover {
+            color: var(--accent-blue, #667eea);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color, #2d3561);
+        }
+
+        .sidebar-header h6 {
+            margin: 0;
+            color: var(--text-light, #e0e6ff);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: var(--text-muted, #a0a9c9);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            display: none;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-close:hover {
+            color: var(--accent-blue, #667eea);
+        }
+
+        main {
+            padding: 2rem 1.5rem;
+        }
+
+        @@media (min-width: 992px) {
+            .sidebar {
+                display: block !important;
+                position: fixed;
+                left: 0;
+                width: var(--sidebar-width);
+                top: var(--header-height);
+                height: calc(100vh - var(--header-height));
+                transition: left 0.3s ease;
+            }
+
+            .sidebar-close {
+                display: block;
+            }
+
+            .main-wrapper {
+                margin-left: var(--sidebar-width);
+                transition: margin-left 0.3s ease;
+            }
+
+            body.hide-sidebar .main-wrapper {
+                margin-left: 0;
+            }
+
+            body.hide-sidebar .sidebar {
+                left: calc(var(--sidebar-width) * -1);
+            }
+        }
+
+        @@media (max-width: 991px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            main {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <header>
-    <nav class="navbar navbar-expand-sm navbar-dark">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid" style="padding: 0 1.5rem;">
+            <button class="sidebar-toggle" id="sidebarToggle" title="Visa/dölj sidopanel">
+                <i class="bi bi-list"></i>
+                <i class="bi bi-x-lg" style="display: none;"></i>
+            </button>
             <a class="navbar-brand" asp-page="/Index">
                 <i class="bi bi-rocket-fill"></i> @(Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS")
             </a>
@@ -32,7 +347,7 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Index"><i class="bi bi-house-fill"></i> Hem</a>
+                        <a class="nav-link" asp-page="/Index"><i class="bi bi-house-fill"></i> Home</a>
                     </li>
                     @foreach (var menuPage in Context.Pages.Where(p => p.ShowInMenu).ToList())
                     {
@@ -49,27 +364,153 @@
     </nav>
 </header>
 
-<main class="container mt-5 mb-5">
-    @RenderBody()
-</main>
-
-<footer class="footer text-muted mt-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                &copy; 2025 - @(Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS")
-            </div>
-            <div class="col-md-6 text-end">
-                <a href="/Admin/Login" class="text-muted me-3">Admin Login</a>
-                <a href="https://github.com" class="text-muted"><i class="bi bi-github"></i></a>
-            </div>
+<div class="main-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h6><i class="bi bi-layout-sidebar"></i> Menu</h6>
+            <button class="sidebar-close" id="sidebarClose" title="Hide sidebar">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+                <a href="/" class="sidebar-menu-link">
+                    <i class="bi bi-house-fill"></i>
+                    <span>Startsida</span>
+                </a>
+            </li>
+            @foreach (var menuPage in Context.Pages.Where(p => p.ShowInMenu).Take(5).ToList())
+            {
+                <li class="sidebar-menu-item">
+                    <a href="/@menuPage.Slug" class="sidebar-menu-link">
+                        <i class="bi bi-file-text"></i>
+                        <span>@menuPage.Title</span>
+                    </a>
+                </li>
+            }
+            <li class="sidebar-menu-item" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color, #2d3561);">
+                <a href="/Admin/Login" class="sidebar-menu-link">
+                    <i class="bi bi-lock-fill"></i>
+                    <span>Admin</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="content-wrapper">
+        <main class="container-fluid">
+            @RenderBody()
+        </main>
+
+        <footer>
+            <div class="container-fluid">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h5><i class="bi bi-rocket-fill"></i> @(Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS")</h5>
+                        <p>Modern content management system built for performance and flexibility.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h5>Quick Links</h5>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/Admin/Login">Admin Panel</a></li>
+                            @foreach (var page in Context.Pages.Where(p => p.ShowInMenu).Take(3).ToList())
+                            {
+                                <li><a href="/@(page.Slug)">@(page.Title)</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h5>Follow us</h5>
+                        <div class="social-links">
+                            <a href="https://github.com" title="GitHub"><i class="bi bi-github"></i></a>
+                            <a href="https://twitter.com" title="Twitter"><i class="bi bi-twitter"></i></a>
+                            <a href="https://linkedin.com" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <div>&copy; 2025 - @(Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS"). All rights reserved.</div>
+                    <div style="text-align: right; font-size: 0.9rem;">
+                        <a href="https://github.com/K3NT4/PagefyCMS" target="_blank" style="color: var(--text-light, #e0e6ff); text-decoration: none;">
+                            Created with PagefyCMS
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
-</footer>
+</div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 @await Html.PartialAsync("_MediaGalleryModal")
+
+<script>
+    // Läs sparad preferens
+    if (localStorage.getItem('sidebarHidden') === 'true') {
+        document.body.classList.add('hide-sidebar');
+        updateSidebarToggle();
+    }
+
+    function updateSidebarToggle() {
+        const toggle = document.getElementById('sidebarToggle');
+        const icons = toggle?.querySelectorAll('i');
+        if (icons && icons.length === 2) {
+            if (document.body.classList.contains('hide-sidebar')) {
+                icons[0].style.display = 'none';
+                icons[1].style.display = 'block';
+            } else {
+                icons[0].style.display = 'block';
+                icons[1].style.display = 'none';
+            }
+        }
+    }
+
+    document.getElementById('sidebarToggle')?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const sidebar = document.getElementById('sidebar');
+        const isHidden = document.body.classList.contains('hide-sidebar');
+        
+        if (window.innerWidth < 992) {
+            // Mobil: visa/dölj sidebar med animation
+            sidebar.classList.toggle('show');
+        } else {
+            // Desktop: toggle hide-sidebar class
+            document.body.classList.toggle('hide-sidebar');
+            localStorage.setItem('sidebarHidden', document.body.classList.contains('hide-sidebar'));
+            updateSidebarToggle();
+        }
+    });
+
+    document.getElementById('sidebarClose')?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.body.classList.toggle('hide-sidebar');
+        localStorage.setItem('sidebarHidden', document.body.classList.contains('hide-sidebar'));
+        updateSidebarToggle();
+    });
+
+    document.querySelectorAll('.sidebar-menu-link').forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth < 992) {
+                document.getElementById('sidebar').classList.remove('show');
+            }
+        });
+    });
+
+    document.addEventListener('click', function(e) {
+        const sidebar = document.getElementById('sidebar');
+        const toggle = document.getElementById('sidebarToggle');
+        if (window.innerWidth < 992 && 
+            !sidebar.contains(e.target) && 
+            !toggle.contains(e.target) &&
+            sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
+        }
+    });
+</script>
+
 @RenderSection("Scripts", required: false)
 </body>
 </html>

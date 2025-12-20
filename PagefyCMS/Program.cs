@@ -15,19 +15,22 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(60); // Tiden man är inloggad
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Session timeout
 });
 
-// Registrera addon-system
+// Register addon system
 builder.Services.AddSingleton<AddonManager>();
 builder.Services.AddScoped<AddonInstaller>();
 
-// Registrera tema-system
+// Register theme system
 builder.Services.AddScoped<IThemeManager, ThemeManager>();
+
+// Register language service
+builder.Services.AddScoped<ILanguageService, LanguageService>();
 
 var app = builder.Build();
 
-// Initalisera addon-systemet
+// Initialize addon system
 var addonManager = app.Services.GetRequiredService<AddonManager>();
 await addonManager.LoadAddonsAsync();
 await addonManager.InitializeAllAddonsAsync();

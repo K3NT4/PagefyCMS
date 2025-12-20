@@ -2,18 +2,18 @@
 @model PagefyCMS.Pages.Admin.DashboardModel
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Översikt";
+    ViewData["Title"] = "Dashboard";
 }
 
-<h2 class="mb-4">Adminpanel - Översikt</h2>
+<h2 class="mb-4">Admin Panel - Dashboard</h2>
 
 <div class="row mb-4">
     <div class="col-md-3">
         <div class="card text-bg-primary shadow-sm">
             <div class="card-body">
-                <h5 class="card-title">Sidor</h5>
+                <h5 class="card-title">Pages</h5>
                 <p class="display-6">@Model.PageCount</p>
-                <a class="btn btn-light btn-sm" asp-page="/Admin/Pages/Index">Hantera sidor</a>
+                <a class="btn btn-light btn-sm" asp-page="/Admin/Pages/Index">Manage Pages</a>
             </div>
         </div>
     </div>
@@ -21,18 +21,18 @@
     <div class="col-md-3">
         <div class="card text-bg-success shadow-sm">
             <div class="card-body">
-                <h5 class="card-title">Artiklar</h5>
+                <h5 class="card-title">Articles</h5>
                 <p class="display-6">@Model.ArticleCount</p>
-                <a class="btn btn-light btn-sm" asp-page="/Admin/Articles/Index">Hantera artiklar</a>
+                <a class="btn btn-light btn-sm" asp-page="/Admin/Articles/Index">Manage Articles</a>
             </div>
         </div>
     </div>
     <div class="col-md-3">
     <div class="card text-bg-warning shadow-sm">
         <div class="card-body">
-            <h5 class="card-title">Bilder</h5>
+            <h5 class="card-title">Media</h5>
             <p class="display-6">@Model.MediaCount</p>
-            <a class="btn btn-light btn-sm" asp-page="/Admin/Media/Index">Hantera bilder</a>
+            <a class="btn btn-light btn-sm" asp-page="/Admin/Media/Index">Manage Media</a>
         </div>
     </div>
 </div>

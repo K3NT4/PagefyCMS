@@ -6,7 +6,16 @@
 
 ## What is PagefyCMS?
 
-A lightweight, modern content management system built with ASP.NET Core 8.0. Create pages, articles, manage media, and switch themes - all with an intuitive admin panel.
+A lightweight, modern content management system built with ASP.NET Core 8.0. Create pages, articles, manage media, switch themes, and manage translations - all with an intuitive admin panel.
+
+**Features:**
+- 📄 Pages and Articles management
+- 🎨 7 professional themes with easy switching
+- 🖼️ Media library with automatic WebP optimization
+- 🔌 Addon system for extensibility
+- 🌐 Language management system
+- 📱 Fully responsive design
+- 🎯 Professional dark theme
 
 ---
 
@@ -44,7 +53,7 @@ dotnet run
 
 Go to: `http://localhost:5256/Admin/Dashboard`
 
-> Note: Initial login setup depends on your configuration
+The admin interface is fully in English with a modern dark theme.
 
 ### 2. Create Your First Page
 
@@ -60,7 +69,7 @@ Go to: `http://localhost:5256/Admin/Dashboard`
 2. Enter headline: "My First Article"
 3. Write content
 4. Click "Publish"
-5. View: `http://localhost:5256/articles`
+5. View articles at: `http://localhost:5256`
 
 ### 4. Upload an Image
 
@@ -73,10 +82,17 @@ Go to: `http://localhost:5256/Admin/Dashboard`
 ### 5. Switch Theme
 
 1. **Admin → Settings**
-2. Look for "Tema" (Theme) section
+2. Look for "Theme" section
 3. Select from 7 available themes
-4. Click "Spara ändringar" (Save)
+4. Click "Save Changes"
 5. Visit homepage to see new theme
+
+### 6. Manage Languages
+
+1. **Admin → Languages**
+2. Upload a language file in JSON format
+3. Download the default English template for translation
+4. Upload translated language files
 
 ---
 
@@ -86,7 +102,7 @@ Choose the perfect look for your site:
 
 | Theme | Style | Best For |
 |-------|-------|----------|
-| **Framtidsdesign** | Modern gradient | General purpose |
+| **Future Design** (Default) | Modern gradient | General purpose |
 | **Neon Cyberpunk** | Futuristic neon | Tech, gaming |
 | **Professional Midnight** | Corporate dark | Business |
 | **News Hub** | Content-focused | News, blogs |
@@ -95,7 +111,39 @@ Choose the perfect look for your site:
 | **Aurora Gradient** | Northern lights | Creative, inspiring |
 
 **To switch themes:**
-- Admin → Settings → Select theme → Save changes
+- Admin → Settings → Select theme → Save Changes
+
+---
+
+## 🌐 Language Management
+
+### What's New?
+
+PagefyCMS v2.0 includes a complete language management system:
+- Upload custom language files
+- Download translation templates
+- Support for unlimited languages
+- JSON-based translation format
+
+### How to Add a Language
+
+1. Go to **Admin → Languages**
+2. Click "Download en.json Template"
+3. Translate all strings to your language
+4. Go back to Languages panel
+5. Enter language code (e.g., "sv" for Swedish)
+6. Upload your translated JSON file
+7. New language is now available
+
+### Language File Format
+
+```json
+{
+  "welcome": "Your translation here",
+  "dashboard": "Your translation here",
+  "pages": "Your translation here"
+}
+```
 
 ---
 
@@ -110,7 +158,7 @@ Addons extend PagefyCMS without modifying core code. Enable/disable them from th
 
 **Go to:** Admin → Settings → Addons
 
-For detailed addon development, see [Addons Guide](ADDONS_GUIDE_EN.md)
+For detailed addon development, see [Addons Guide](ADDONS_GUIDE.md)
 
 ---
 
@@ -119,12 +167,15 @@ For detailed addon development, see [Addons Guide](ADDONS_GUIDE_EN.md)
 ```
 PagefyCMS/
 ├── Pages/Admin/              → Admin dashboard & management
+│   ├── Settings/Languages    → Language management
+│   └── ...                   → Other admin pages
 ├── Pages/                    → Frontend pages
 ├── Models/                   → Data models (Page, Article, Media)
-├── Services/                 → Business logic (ThemeManager)
+├── Services/                 → Business logic (ThemeManager, LanguageService)
 ├── Addons/                   → Plugin system
 ├── wwwroot/
 │   ├── css/                 → Stylesheets (site.css + themes)
+│   ├── languages/           → JSON language files
 │   ├── themes/              → Theme directories
 │   └── uploads/             → Media files
 └── Data/                     → Database configuration
@@ -144,9 +195,11 @@ PagefyCMS/
 4. Restart application
 5. Select from Admin → Settings
 
-See [Themes Guide](THEMES_GUIDE_EN.md) for details.
+See [Themes Guide](PagefyCMS/THEMES_GUIDE.md) for details.
 
 ### Create an Addon
+
+
 
 1. Create folder: `PagefyCMS/Addons/MyAddon/`
 2. Create `MyAddon.cs` extending `BaseAddon`

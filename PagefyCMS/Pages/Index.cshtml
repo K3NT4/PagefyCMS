@@ -1,22 +1,185 @@
 ﻿@page
 @model PagefyCMS.Pages.IndexModel
+@inject PagefyCMS.Data.PagefyDbContext Context
 
-<h2>Senaste nyheterna</h2>
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, var(--accent-blue, #667eea) 0%, var(--accent-pink, #764ba2) 100%);
+        padding: 4rem 0;
+        margin: -2rem -12px 3rem;
+        border-radius: 0 0 1rem 1rem;
+        text-align: center;
+        color: white;
+    }
+
+    .hero-section h1 {
+        background: none;
+        -webkit-text-fill-color: white;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-section p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+    }
+
+    .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .article-card {
+        background: var(--card-bg, #1a1f3a);
+        border: 1px solid var(--border-color, #2d3561);
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        border-color: var(--accent-blue, #667eea);
+    }
+
+    .article-date {
+        font-size: 0.85rem;
+        color: var(--text-muted, #a0a9c9);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .article-card h3 {
+        color: var(--text-light, #e0e6ff);
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+    }
+
+    .article-excerpt {
+        color: var(--text-muted, #a0a9c9);
+        flex-grow: 1;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .article-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--accent-blue, #667eea);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .article-link:hover {
+        color: var(--accent-pink, #f5576c);
+        transform: translateX(5px);
+    }
+
+    .featured-section {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(245, 87, 108, 0.05) 100%);
+        border: 1px solid var(--border-color, #2d3561);
+        border-radius: 0.5rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .featured-section h3 {
+        color: var(--text-light, #e0e6ff);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .cta-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--accent-blue, #667eea) 0%, var(--accent-pink, #f5576c) 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted, #a0a9c9);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        opacity: 0.5;
+        margin-bottom: 1rem;
+        display: block;
+    }
+</style>
+
+<div class="hero-section">
+        <h1>Welcome</h1>
+        <p>Discover our latest articles and news</p>
 
 @if (Model.Articles.Any())
 {
-    <ul>
-    @foreach (var news in Model.Articles)
-    {
-        <li>
-            <b>
-                <a href="/Article/@news.Slug">@news.Headline</a>
-            </b> - @news.PublishedAt.ToString("yyyy-MM-dd")
-        </li>
-    }
-    </ul>
+    <div class="news-grid">
+        @foreach (var article in Model.Articles)
+        {
+            <article class="article-card">
+                <div class="article-date">
+                    <i class="bi bi-calendar-event"></i>
+                    @article.PublishedAt.ToString("yyyy-MM-dd HH:mm")
+                </div>
+                <h3>@article.Headline</h3>
+                <p class="article-excerpt">@(article.Content?.Length > 150 ? article.Content.Substring(0, 150) + "..." : article.Content)</p>
+                <a href="/Article/@article.Id" class="article-link">
+                    Read more
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </article>
+        }
+    </div>
 }
 else
 {
-    <p>Inga artiklar publicerade ännu.</p>
+    <div class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No articles yet</h3>
+        <p>There are no published articles at the moment.</p>
+    </div>
+}
+
+@if (Context.Pages.Where(p => p.ShowInMenu).Any())
+{
+    <div class="featured-section">
+        <h3><i class="bi bi-star-fill"></i> Important Pages</h3>
+        <div class="row">
+            @foreach (var page in Context.Pages.Where(p => p.ShowInMenu).Take(3).ToList())
+            {
+                <div class="col-md-4 mb-3">
+                    <a href="/@(page.Slug)" class="cta-button" style="width: 100%; text-align: center;">
+                        @(page.Title)
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
 }

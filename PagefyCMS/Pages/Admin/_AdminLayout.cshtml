@@ -2,7 +2,7 @@
 @inject PagefyCMS.Data.PagefyDbContext Context
 
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,16 +30,16 @@
             <div class="collapse navbar-collapse" id="adminNavbar">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Admin/Dashboard"><i class="bi bi-speedometer2"></i> Översikt</a>
+                        <a class="nav-link" asp-page="/Admin/Dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Admin/Pages/Index"><i class="bi bi-file-earmark-text"></i> Sidor</a>
+                        <a class="nav-link" asp-page="/Admin/Pages/Index"><i class="bi bi-file-earmark-text"></i> Pages</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Admin/Articles/Index"><i class="bi bi-newspaper"></i> Artiklar</a>
+                        <a class="nav-link" asp-page="/Admin/Articles/Index"><i class="bi bi-newspaper"></i> Articles</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Admin/Media/Index"><i class="bi bi-image"></i> Bilder</a>
+                        <a class="nav-link" asp-page="/Admin/Media/Index"><i class="bi bi-image"></i> Media</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-page="/Admin/Settings/Addons"><i class="bi bi-puzzle"></i> Addons</a>
@@ -51,10 +51,13 @@
 
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" asp-page="/Admin/Settings/Settings"><i class="bi bi-gear"></i> Inställningar</a>
+                        <a class="nav-link" asp-page="/Admin/Settings/Languages"><i class="bi bi-translate"></i> Languages</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Logout"><i class="bi bi-box-arrow-right"></i> Logga ut</a>
+                        <a class="nav-link" asp-page="/Admin/Settings/Settings"><i class="bi bi-gear"></i> Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Admin/Logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
                     </li>
                 </ul>
             </div>
@@ -73,7 +76,7 @@
                 &copy; 2025 - @(Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS")
             </div>
             <div class="col-md-6 text-end">
-                <a href="/" class="text-muted">← Till webbplats</a>
+                <a href="/" class="text-muted">← Back to Website</a>
             </div>
         </div>
     </div>
