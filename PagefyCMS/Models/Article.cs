@@ -18,5 +18,13 @@ namespace PagefyCMS.Models
         public string Content { get; set; } = string.Empty;
 
         public DateTime PublishedAt { get; set; }
+
+        [StringLength(255)]
+        public string MetaTitle { get; set; } = string.Empty;
+
+        [StringLength(500)]
+        public string MetaDescription { get; set; } = string.Empty;
+
+        public DateTime UpdatedAt { get; set; }
     }
 }
