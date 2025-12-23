@@ -15,8 +15,26 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="NewPage.Slug" class="form-label">Slug (URL-del)</label>
-        <input asp-for="NewPage.Slug" class="form-control" required />
+        <label asp-for="NewPage.Slug" class="form-label">Slug (Lämna tom för automatisk)</label>
+        <input asp-for="NewPage.Slug" class="form-control" />
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            SEO Inställningar
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label asp-for="NewPage.MetaTitle" class="form-label">Meta Titel</label>
+                <input asp-for="NewPage.MetaTitle" class="form-control" />
+                <div class="form-text">Titeln som visas i sökresultat och webbläsarfliken.</div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="NewPage.MetaDescription" class="form-label">Meta Beskrivning</label>
+                <textarea asp-for="NewPage.MetaDescription" class="form-control" rows="3"></textarea>
+                <div class="form-text">Kort beskrivning som visas i sökresultat.</div>
+            </div>
+        </div>
     </div>
 <div class="mb-3">
     <label asp-for="NewPage.GalleryGroup" class="form-label">Galleri-grupp (valfritt)</label>

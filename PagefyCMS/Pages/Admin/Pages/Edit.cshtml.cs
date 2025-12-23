@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
+using PagefyCMS.Services;
 
 namespace PagefyCMS.Pages.Admin.Pages
 {
@@ -37,6 +38,13 @@ namespace PagefyCMS.Pages.Admin.Pages
 
             if (!ModelState.IsValid)
                 return Page();
+
+            if (string.IsNullOrWhiteSpace(EditPage.Slug) && !string.IsNullOrWhiteSpace(EditPage.Title))
+            {
+                EditPage.Slug = SlugHelper.GenerateSlug(EditPage.Title);
+            }
+
+            EditPage.UpdatedAt = DateTime.Now;
 
             _context.Pages.Update(EditPage);
             _context.SaveChanges();

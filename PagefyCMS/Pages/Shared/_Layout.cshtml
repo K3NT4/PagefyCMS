@@ -6,7 +6,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@(Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS")</title>
+    <title>@(ViewData["MetaTitle"] as string ?? Context.Settings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value ?? "PagefyCMS")</title>
+    <meta name="description" content="@(ViewData["MetaDescription"] as string ?? "")" />
     
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">

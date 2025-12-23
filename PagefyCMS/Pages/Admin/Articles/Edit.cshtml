@@ -20,6 +20,24 @@
         <label asp-for="EditArticle.Slug" class="form-label">Slug</label>
         <input asp-for="EditArticle.Slug" class="form-control" required />
     </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            SEO Inställningar
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label asp-for="EditArticle.MetaTitle" class="form-label">Meta Titel</label>
+                <input asp-for="EditArticle.MetaTitle" class="form-control" />
+                <div class="form-text">Titeln som visas i sökresultat och webbläsarfliken.</div>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EditArticle.MetaDescription" class="form-label">Meta Beskrivning</label>
+                <textarea asp-for="EditArticle.MetaDescription" class="form-control" rows="3"></textarea>
+                <div class="form-text">Kort beskrivning som visas i sökresultat.</div>
+            </div>
+        </div>
+    </div>
     @await Html.PartialAsync("_MediaGalleryModal")
     @await Component.InvokeAsync("EditorSelector")
 

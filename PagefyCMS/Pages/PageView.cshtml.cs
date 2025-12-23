@@ -18,6 +18,12 @@ namespace PagefyCMS.Pages
         public void OnGet(string slug)
         {
             PageData = _context.Pages.FirstOrDefault(p => p.Slug == slug);
+
+            if (PageData != null)
+            {
+                ViewData["MetaTitle"] = PageData.MetaTitle;
+                ViewData["MetaDescription"] = PageData.MetaDescription;
+            }
         }
     }
 }

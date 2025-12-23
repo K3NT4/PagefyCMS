@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
-using System.Text.RegularExpressions;
+using PagefyCMS.Services;
 
 namespace PagefyCMS.Pages.Admin.Articles
 {
@@ -41,23 +41,15 @@ namespace PagefyCMS.Pages.Admin.Articles
 
             if (string.IsNullOrWhiteSpace(EditArticle.Slug) && !string.IsNullOrWhiteSpace(EditArticle.Headline))
             {
-                EditArticle.Slug = GenerateSlug(EditArticle.Headline);
+                EditArticle.Slug = SlugHelper.GenerateSlug(EditArticle.Headline);
             }
+
+            EditArticle.UpdatedAt = DateTime.Now;
 
             _context.Articles.Update(EditArticle);
             _context.SaveChanges();
 
             return RedirectToPage("./Index");
-        }
-
-        private string GenerateSlug(string input)
-        {
-            string slug = input.ToLowerInvariant();
-            slug = Regex.Replace(slug, @"\s+", "-");
-            slug = Regex.Replace(slug, @"[^a-z0-9\-]", "");
-            slug = Regex.Replace(slug, @"\-+", "-");
-            slug = slug.Trim('-');
-            return slug;
         }
     }
 }
