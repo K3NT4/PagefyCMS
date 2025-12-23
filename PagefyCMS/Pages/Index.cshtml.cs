@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace PagefyCMS.Pages
 {
@@ -11,6 +12,7 @@ namespace PagefyCMS.Pages
     public class IndexModel : PageModel
     {
         private readonly PagefyDbContext _context;
+        private readonly ILogger<IndexModel> _logger;
         private const int ArticlesPerPage = 10;
 
         /// <summary>
@@ -23,9 +25,10 @@ namespace PagefyCMS.Pages
         /// </summary>
         public string? SiteTitle { get; set; }
 
-        public IndexModel(PagefyDbContext context)
+        public IndexModel(PagefyDbContext context, ILogger<IndexModel> logger)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         /// <summary>
@@ -53,7 +56,7 @@ namespace PagefyCMS.Pages
             catch (Exception ex)
             {
                 // Log error (can be extended with logging framework)
-                System.Diagnostics.Debug.WriteLine($"Error loading articles: {ex.Message}");
+                _logger.LogError(ex, "Error loading articles: {Message}", ex.Message);
                 
                 // Don't crash - just show empty list
                 Articles = new List<ArticlePage>();
