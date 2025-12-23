@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
 using SixLabors.ImageSharp;
@@ -11,11 +12,13 @@ namespace PagefyCMS.Pages.Admin.Media
     {
         private readonly IWebHostEnvironment _env;
         private readonly PagefyDbContext _context;
+        private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(IWebHostEnvironment env, PagefyDbContext context)
+        public IndexModel(IWebHostEnvironment env, PagefyDbContext context, ILogger<IndexModel> logger)
         {
             _env = env;
             _context = context;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -173,9 +176,9 @@ namespace PagefyCMS.Pages.Admin.Media
                         System.IO.File.Delete(fullPath);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // Log error but continue with deletion
+                    _logger.LogError(ex, "Failed to delete file: {FilePath}", filePath);
                 }
             }
 
