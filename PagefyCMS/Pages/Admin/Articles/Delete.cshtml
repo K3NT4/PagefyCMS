@@ -1,21 +1,24 @@
-﻿@page "{id:int}"
+@page "{id:int}"
 @model PagefyCMS.Pages.Admin.Articles.DeleteArticleModel
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Ta bort artikel";
 }
 
 <h2>Ta bort artikel</h2>
 
 @if (Model.ArticleData != null)
 {
-    <p>Är du säker på att du vill ta bort artikeln "<b>@Model.ArticleData.Headline</b>"?</p>
+    <div class="alert alert-warning">
+        Är du säker på att du vill ta bort artikeln "<b>@Model.ArticleData.Headline</b>"?
+    </div>
 
     <form method="post">
-        <button type="submit">Ja, ta bort</button>
-        <a href="/Admin/Articles">Avbryt</a>
+        <button type="submit" class="btn btn-danger">Ja, ta bort</button>
+        <a asp-page="./Index" class="btn btn-secondary ms-2">Avbryt</a>
     </form>
 }
 else
 {
-    <p>Artikeln kunde inte hittas.</p>
+    <div class="alert alert-danger">Artikeln kunde inte hittas.</div>
 }
