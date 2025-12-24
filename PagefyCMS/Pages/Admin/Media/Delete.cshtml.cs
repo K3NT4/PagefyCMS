@@ -38,20 +38,27 @@ namespace PagefyCMS.Pages.Admin.Media
 
             Id = Media.Id;
 
-            // Perform full scan for usage
+            // Perform full scan for usage, with a safety limit
+            var limit = 50;
+
             var pages = _context.Pages
                 .AsNoTracking()
                 .Where(p => p.Content.Contains(Media.Slug))
                 .Select(p => $"Sida: {p.Title}")
+                .Take(limit + 1)
                 .ToList();
             UsageList.AddRange(pages);
 
-            var articles = _context.Articles
-                .AsNoTracking()
-                .Where(a => a.Content.Contains(Media.Slug))
-                .Select(a => $"Artikel: {a.Headline}")
-                .ToList();
-            UsageList.AddRange(articles);
+            if (UsageList.Count <= limit)
+            {
+                var articles = _context.Articles
+                    .AsNoTracking()
+                    .Where(a => a.Content.Contains(Media.Slug))
+                    .Select(a => $"Artikel: {a.Headline}")
+                    .Take(limit + 1 - UsageList.Count)
+                    .ToList();
+                UsageList.AddRange(articles);
+            }
 
             return Page();
         }
@@ -64,9 +71,11 @@ namespace PagefyCMS.Pages.Admin.Media
             var media = await _context.MediaLibrary.FindAsync(Id);
             if (media != null)
             {
-                await DeleteMediaFiles(media);
                 _context.MediaLibrary.Remove(media);
                 await _context.SaveChangesAsync();
+
+                // Only delete files if database removal succeeds
+                await DeleteMediaFiles(media);
             }
 
             return RedirectToPage("/Admin/Media/Index");

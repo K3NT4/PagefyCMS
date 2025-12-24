@@ -104,14 +104,6 @@ namespace PagefyCMS.Pages.Admin.Media
             }
 
             // Re-generate WebP versions
-            var fileName = Path.GetFileNameWithoutExtension(media.Slug); // Slug is filename-guid.ext, we need the base name for webp files?
-            // Actually, in IndexModel, slug was "filename-guid.ext".
-            // WebP files were saved as "filename-guid.webp" in subdirectories.
-            // We need to parse the base name from the Slug or store it.
-            // media.Slug is "mypic-GUID.jpg".
-            // The WebP files are "mypic-GUID.webp".
-            // So we can strip extension from Slug to get the base name.
-
             var baseName = Path.GetFileNameWithoutExtension(media.Slug);
 
             var smallPath = Path.Combine(uploadsPath, "webp", "small", $"{baseName}.webp");
