@@ -27,7 +27,13 @@ namespace PagefyCMS.Pages.Admin.Media
         [BindProperty]
         public Guid DeleteId { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+        public int PageSize { get; set; } = 20;
+
         public List<MediaItem> MediaList { get; set; }
+        public Dictionary<Guid, List<string>> MediaUsage { get; set; } = new Dictionary<Guid, List<string>>();
 
         private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
         private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB
@@ -37,7 +43,48 @@ namespace PagefyCMS.Pages.Admin.Media
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
                 return RedirectToPage("/Admin/Login");
 
-            MediaList = _context.MediaLibrary.OrderByDescending(m => m.UploadedAt).ToList();
+            var totalItems = _context.MediaLibrary.Count();
+            TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+
+            if (CurrentPage < 1) CurrentPage = 1;
+            if (TotalPages > 0 && CurrentPage > TotalPages) CurrentPage = TotalPages;
+
+            MediaList = _context.MediaLibrary
+                .OrderByDescending(m => m.UploadedAt)
+                .Skip((CurrentPage - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            // Analyze media usage
+            // performing a query per media item to avoid loading all content into memory.
+            foreach (var media in MediaList)
+            {
+                var usedIn = new List<string>();
+
+                // Check Pages
+                var pages = _context.Pages
+                    .AsNoTracking()
+                    .Where(p => p.Content.Contains(media.Slug))
+                    .Select(p => $"Sida: {p.Title}")
+                    .Take(5)
+                    .ToList();
+                usedIn.AddRange(pages);
+
+                // Check Articles
+                var articles = _context.Articles
+                    .AsNoTracking()
+                    .Where(a => a.Content.Contains(media.Slug))
+                    .Select(a => $"Artikel: {a.Headline}")
+                    .Take(5)
+                    .ToList();
+                usedIn.AddRange(articles);
+
+                if (usedIn.Any())
+                {
+                    MediaUsage[media.Id] = usedIn;
+                }
+            }
+
             return Page();
         }
 
