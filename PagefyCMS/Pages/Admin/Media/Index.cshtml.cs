@@ -53,32 +53,24 @@ namespace PagefyCMS.Pages.Admin.Media
                 .ToList();
 
             // Analyze media usage
-            // performing a query per media item to avoid loading all content into memory.
+            // Uses the persistent AssetUsage index (efficient query).
+            // We fetch all usages for the current page of media items.
+            var mediaIds = MediaList.Select(m => m.Id).ToList();
+
+            var usages = _context.AssetUsages
+                .Where(u => mediaIds.Contains(u.AssetId))
+                .ToList(); // Load into memory to group
+
             foreach (var media in MediaList)
             {
-                var usedIn = new List<string>();
-
-                // Check Pages
-                var pages = _context.Pages
-                    .AsNoTracking()
-                    .Where(p => p.Content.Contains(media.Slug))
-                    .Select(p => $"Sida: {p.Title}")
-                    .Take(5)
-                    .ToList();
-                usedIn.AddRange(pages);
-
-                // Check Articles
-                var articles = _context.Articles
-                    .AsNoTracking()
-                    .Where(a => a.Content.Contains(media.Slug))
-                    .Select(a => $"Artikel: {a.Headline}")
-                    .Take(5)
-                    .ToList();
-                usedIn.AddRange(articles);
-
-                if (usedIn.Any())
+                var mediaUsages = usages.Where(u => u.AssetId == media.Id).ToList();
+                if (mediaUsages.Any())
                 {
-                    MediaUsage[media.Id] = usedIn;
+                    // Format strings for display
+                    var list = mediaUsages
+                        .Select(u => $"{u.ContentType == "Page" ? "Sida" : "Artikel"}: {u.ContentTitle}")
+                        .ToList();
+                    MediaUsage[media.Id] = list;
                 }
             }
 

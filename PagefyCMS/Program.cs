@@ -28,12 +28,22 @@ builder.Services.AddScoped<IThemeManager, ThemeManager>();
 // Register language service
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 
+// Register Asset Usage Service
+builder.Services.AddScoped<AssetUsageService>();
+
 var app = builder.Build();
 
 // Initialize addon system
 var addonManager = app.Services.GetRequiredService<AddonManager>();
 await addonManager.LoadAddonsAsync();
 await addonManager.InitializeAllAddonsAsync();
+
+// Initialize DB tables (Manual Migration for AssetUsage)
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<PagefyDbContext>();
+    DbInitializer.EnsureAssetUsageTable(context);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

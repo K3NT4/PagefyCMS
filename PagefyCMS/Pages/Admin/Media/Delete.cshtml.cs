@@ -38,27 +38,15 @@ namespace PagefyCMS.Pages.Admin.Media
 
             Id = Media.Id;
 
-            // Perform full scan for usage, with a safety limit
+            // Retrieve usage from index
             var limit = 50;
 
-            var pages = _context.Pages
-                .AsNoTracking()
-                .Where(p => p.Content.Contains(Media.Slug))
-                .Select(p => $"Sida: {p.Title}")
+            UsageList = _context.AssetUsages
+                .Where(u => u.AssetId == Media.Id)
+                .OrderByDescending(u => u.LastSeenAt)
                 .Take(limit + 1)
+                .Select(u => $"{u.ContentType == "Page" ? "Sida" : "Artikel"}: {u.ContentTitle}")
                 .ToList();
-            UsageList.AddRange(pages);
-
-            if (UsageList.Count <= limit)
-            {
-                var articles = _context.Articles
-                    .AsNoTracking()
-                    .Where(a => a.Content.Contains(Media.Slug))
-                    .Select(a => $"Artikel: {a.Headline}")
-                    .Take(limit + 1 - UsageList.Count)
-                    .ToList();
-                UsageList.AddRange(articles);
-            }
 
             return Page();
         }
