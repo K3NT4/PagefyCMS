@@ -42,10 +42,7 @@
 
         <div style="margin-top: 10px;">
             <a href="/admin/media/edit?id=@item.Id" class="btn btn-sm btn-secondary">Redigera</a>
-            <form method="post" style="display: inline;">
-                <input type="hidden" name="DeleteId" value="@item.Id" />
-                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Är du säker?');">Ta bort</button>
-            </form>
+            <a href="/admin/media/delete?id=@item.Id" class="btn btn-sm btn-danger">Ta bort</a>
         </div>
     </div>
 }

@@ -24,9 +24,6 @@ namespace PagefyCMS.Pages.Admin.Media
         [BindProperty]
         public IFormFile UploadFile { get; set; }
 
-        [BindProperty]
-        public Guid DeleteId { get; set; }
-
         [BindProperty(SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; }
@@ -92,18 +89,6 @@ namespace PagefyCMS.Pages.Admin.Media
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
                 return RedirectToPage("/Admin/Login");
-
-            if (DeleteId != Guid.Empty)
-            {
-                var media = await _context.MediaLibrary.FindAsync(DeleteId);
-                if (media != null)
-                {
-                    await DeleteMediaFiles(media);
-                    _context.MediaLibrary.Remove(media);
-                    await _context.SaveChangesAsync();
-                }
-                return RedirectToPage();
-            }
 
             if (UploadFile != null && UploadFile.Length > 0)
             {
@@ -202,34 +187,6 @@ namespace PagefyCMS.Pages.Admin.Media
 
             _context.MediaLibrary.Add(media);
             await _context.SaveChangesAsync();
-        }
-
-        private async Task DeleteMediaFiles(MediaItem media)
-        {
-            var filesToDelete = new[] { 
-                media.WebpSmall, 
-                media.WebpMedium, 
-                media.WebpLarge, 
-                media.OriginalPath 
-            };
-
-            foreach (var filePath in filesToDelete)
-            {
-                try
-                {
-                    var fullPath = Path.Combine(_env.WebRootPath, filePath.TrimStart('/'));
-                    if (System.IO.File.Exists(fullPath))
-                    {
-                        System.IO.File.Delete(fullPath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to delete file: {FilePath}", filePath);
-                }
-            }
-
-            await Task.CompletedTask;
         }
     }
 }
