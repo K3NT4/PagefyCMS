@@ -1,0 +1,71 @@
+@page
+@model PagefyCMS.Pages.Admin.Updates.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Systemuppdateringar";
+}
+
+<h2>Systemuppdateringar</h2>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Systemstatus
+            </div>
+            <div class="card-body">
+                <p><strong>Nuvarande version:</strong> @Model.CurrentVersion</p>
+                <p><strong>Miljö:</strong> @Model.EnvironmentName</p>
+                <div class="alert alert-success">
+                    Systemet fungerar normalt.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Uppdateringar
+            </div>
+            <div class="card-body">
+                @if (Model.UpdateInfo != null && Model.UpdateInfo.IsUpdateAvailable)
+                {
+                    <div class="alert alert-info">
+                        <h5>Ny version tillgänglig: @Model.UpdateInfo.LatestVersion</h5>
+                        <small>Släppt: @Model.UpdateInfo.ReleaseDate.ToShortDateString()</small>
+                        <hr />
+                        <div>@Html.Raw(Model.UpdateInfo.ReleaseNotes)</div>
+                    </div>
+
+                    @if (Model.DeploymentTriggered)
+                    {
+                        <div class="alert alert-warning">
+                            <strong>Uppdatering startad!</strong> Deployment-processen har aktiverats. Det kan ta några minuter innan ändringarna syns. Systemet kan starta om under tiden.
+                        </div>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Deploy">
+                            <p>En uppdatering är tillgänglig. Klicka nedan för att starta deployment-processen via CI/CD.</p>
+                            <button type="submit" class="btn btn-primary" onclick="return confirm('Är du säker på att du vill uppdatera systemet? Detta startar en omstart.');">Uppdatera nu</button>
+                        </form>
+                    }
+                }
+                else if (Model.UpdateInfo != null)
+                {
+                    <div class="alert alert-success">
+                        Du har den senaste versionen.
+                    </div>
+                }
+                else
+                {
+                    <p>Klicka på knappen för att söka efter uppdateringar.</p>
+                    <form method="post" asp-page-handler="Check">
+                        <button type="submit" class="btn btn-secondary">Sök efter uppdateringar</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -31,6 +31,10 @@ builder.Services.AddScoped<ILanguageService, LanguageService>();
 // Register Asset Usage Service
 builder.Services.AddScoped<AssetUsageService>();
 
+// Register Update Services
+builder.Services.AddSingleton<IVersionService, VersionService>();
+builder.Services.AddScoped<IUpdateService, MockUpdateService>();
+
 var app = builder.Build();
 
 // Initialize addon system
@@ -63,5 +67,8 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
+
+// Health Check Endpoint
+app.MapGet("/health", () => Results.Ok(new { status = "Healthy", timestamp = DateTime.UtcNow }));
 
 app.Run();
