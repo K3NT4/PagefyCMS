@@ -9,13 +9,15 @@ namespace PagefyCMS.Pages.Admin.Articles
     public class EditModel : PageModel
     {
         private readonly PagefyDbContext _context;
+        private readonly AssetUsageService _usageService;
 
         [BindProperty]
         public ArticlePage EditArticle { get; set; } = new ArticlePage();
 
-        public EditModel(PagefyDbContext context)
+        public EditModel(PagefyDbContext context, AssetUsageService usageService)
         {
             _context = context;
+            _usageService = usageService;
         }
 
         public IActionResult OnGet(int id)
@@ -48,6 +50,9 @@ namespace PagefyCMS.Pages.Admin.Articles
 
             _context.Articles.Update(EditArticle);
             _context.SaveChanges();
+
+            // Index content for asset usage
+            _usageService.IndexContentAsync(EditArticle.Id, "Article", EditArticle.Content, EditArticle.Headline).Wait();
 
             return RedirectToPage("./Index");
         }

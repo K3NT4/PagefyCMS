@@ -24,10 +24,13 @@ namespace PagefyCMS.Pages.Admin.Media
         [BindProperty]
         public IFormFile UploadFile { get; set; }
 
-        [BindProperty]
-        public Guid DeleteId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+        public int PageSize { get; set; } = 20;
 
         public List<MediaItem> MediaList { get; set; }
+        public Dictionary<Guid, List<string>> MediaUsage { get; set; } = new Dictionary<Guid, List<string>>();
 
         private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
         private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB
@@ -37,7 +40,40 @@ namespace PagefyCMS.Pages.Admin.Media
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
                 return RedirectToPage("/Admin/Login");
 
-            MediaList = _context.MediaLibrary.OrderByDescending(m => m.UploadedAt).ToList();
+            var totalItems = _context.MediaLibrary.Count();
+            TotalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+
+            if (CurrentPage < 1) CurrentPage = 1;
+            if (TotalPages > 0 && CurrentPage > TotalPages) CurrentPage = TotalPages;
+
+            MediaList = _context.MediaLibrary
+                .OrderByDescending(m => m.UploadedAt)
+                .Skip((CurrentPage - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            // Analyze media usage
+            // Uses the persistent AssetUsage index (efficient query).
+            // We fetch all usages for the current page of media items.
+            var mediaIds = MediaList.Select(m => m.Id).ToList();
+
+            var usages = _context.AssetUsages
+                .Where(u => mediaIds.Contains(u.AssetId))
+                .ToList(); // Load into memory to group
+
+            foreach (var media in MediaList)
+            {
+                var mediaUsages = usages.Where(u => u.AssetId == media.Id).ToList();
+                if (mediaUsages.Any())
+                {
+                    // Format strings for display
+                    var list = mediaUsages
+                        .Select(u => $"{u.ContentType == "Page" ? "Sida" : "Artikel"}: {u.ContentTitle}")
+                        .ToList();
+                    MediaUsage[media.Id] = list;
+                }
+            }
+
             return Page();
         }
 
@@ -45,18 +81,6 @@ namespace PagefyCMS.Pages.Admin.Media
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("LoggedIn")))
                 return RedirectToPage("/Admin/Login");
-
-            if (DeleteId != Guid.Empty)
-            {
-                var media = await _context.MediaLibrary.FindAsync(DeleteId);
-                if (media != null)
-                {
-                    await DeleteMediaFiles(media);
-                    _context.MediaLibrary.Remove(media);
-                    await _context.SaveChangesAsync();
-                }
-                return RedirectToPage();
-            }
 
             if (UploadFile != null && UploadFile.Length > 0)
             {
@@ -155,34 +179,6 @@ namespace PagefyCMS.Pages.Admin.Media
 
             _context.MediaLibrary.Add(media);
             await _context.SaveChangesAsync();
-        }
-
-        private async Task DeleteMediaFiles(MediaItem media)
-        {
-            var filesToDelete = new[] { 
-                media.WebpSmall, 
-                media.WebpMedium, 
-                media.WebpLarge, 
-                media.OriginalPath 
-            };
-
-            foreach (var filePath in filesToDelete)
-            {
-                try
-                {
-                    var fullPath = Path.Combine(_env.WebRootPath, filePath.TrimStart('/'));
-                    if (System.IO.File.Exists(fullPath))
-                    {
-                        System.IO.File.Delete(fullPath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to delete file: {FilePath}", filePath);
-                }
-            }
-
-            await Task.CompletedTask;
         }
     }
 }

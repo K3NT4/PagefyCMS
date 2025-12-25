@@ -9,13 +9,15 @@ namespace PagefyCMS.Pages.Admin.Pages
     public class CreateModel : PageModel
     {
         private readonly PagefyDbContext _context;
+        private readonly AssetUsageService _usageService;
 
         [BindProperty]
         public ContentPage NewPage { get; set; } = new ContentPage();
 
-        public CreateModel(PagefyDbContext context)
+        public CreateModel(PagefyDbContext context, AssetUsageService usageService)
         {
             _context = context;
+            _usageService = usageService;
         }
 
         public IActionResult OnGet()
@@ -51,6 +53,9 @@ namespace PagefyCMS.Pages.Admin.Pages
 
             _context.Pages.Add(NewPage);
             _context.SaveChanges();
+
+            // Index content for asset usage
+            _usageService.IndexContentAsync(NewPage.Id, "Page", NewPage.Content, NewPage.Title).Wait();
 
             return RedirectToPage("./Index");
         }

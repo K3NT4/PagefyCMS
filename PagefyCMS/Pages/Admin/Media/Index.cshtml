@@ -7,22 +7,69 @@
 <h2>Mediabibliotek</h2>
 
 <a href="/admin/media/upload" class="btn btn-primary">Ladda upp ny bild</a>
+<a href="/admin/media/rebuildindex" class="btn btn-outline-secondary" style="float: right;">Bygg om index</a>
 
 <hr />
 
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
 @foreach (var item in Model.MediaList)
 {
-    <div style="border: 1px solid #ccc; padding: 5px; text-align: center;">
-        <img src="@item.WebpMedium" alt="@item.AltText" style="max-width: 150px;" />
-        <div>@item.Filename</div>
-        <div>
-            <a href="/admin/media/edit?id=@item.Id">Redigera</a> |
-            <form method="post" style="display: inline;">
-                <input type="hidden" name="DeleteId" value="@item.Id" />
-                <button type="submit" style="color: red;">Ta bort</button>
-            </form>
+    <div style="border: 1px solid #ccc; padding: 5px; text-align: center; width: 170px;">
+        <img src="@item.WebpMedium" alt="@item.AltText" style="max-width: 150px; height: auto;" />
+        <div style="font-weight: bold; margin-top: 5px; word-wrap: break-word;">@item.Filename</div>
+
+        @if (Model.MediaUsage.ContainsKey(item.Id))
+        {
+            var usageList = Model.MediaUsage[item.Id];
+            var displayCount = 3;
+            <div style="font-size: 0.8em; color: #555; text-align: left; margin-top: 5px; background: #f9f9f9; padding: 5px;">
+                <strong>Används i (@usageList.Count):</strong>
+                <ul style="padding-left: 15px; margin: 0;">
+                    @foreach (var use in usageList.Take(displayCount))
+                    {
+                        <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="@use">@use</li>
+                    }
+                    @if (usageList.Count > displayCount)
+                    {
+                        <li style="font-style: italic;">...och @(usageList.Count - displayCount) till</li>
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+             <div style="font-size: 0.8em; color: #aaa; margin-top: 5px;">Ej använd</div>
+        }
+
+        <div style="margin-top: 10px;">
+            <a href="/admin/media/edit?id=@item.Id" class="btn btn-sm btn-secondary">Redigera</a>
+            <a href="/admin/media/delete?id=@item.Id" class="btn btn-sm btn-danger">Ta bort</a>
         </div>
     </div>
 }
 </div>
+
+@if (Model.TotalPages > 1)
+{
+    <div style="margin-top: 20px; text-align: center;">
+        @if (Model.CurrentPage > 1)
+        {
+            <a href="?CurrentPage=@(Model.CurrentPage - 1)" class="btn btn-secondary">&laquo; Föregående</a>
+        }
+        else
+        {
+            <span class="btn btn-secondary disabled">&laquo; Föregående</span>
+        }
+
+        <span style="margin: 0 10px;">Sida @Model.CurrentPage av @Model.TotalPages</span>
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <a href="?CurrentPage=@(Model.CurrentPage + 1)" class="btn btn-secondary">Nästa &raquo;</a>
+        }
+        else
+        {
+            <span class="btn btn-secondary disabled">Nästa &raquo;</span>
+        }
+    </div>
+}

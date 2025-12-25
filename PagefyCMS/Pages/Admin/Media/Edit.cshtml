@@ -16,8 +16,14 @@
         <button type="button" class="btn btn-sm btn-outline-secondary mt-1" onclick="copyLink()">Kopiera bildlänk</button>
     </div>
 
-    <form method="post" class="mt-4">
+    <form method="post" enctype="multipart/form-data" class="mt-4">
         <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="mb-3" style="background: #fff3cd; padding: 15px; border-radius: 5px;">
+            <label style="font-weight: bold;">Ersätt fil (behåll URL):</label>
+            <div class="form-text">Ladda upp en ny version av bilden. Den gamla skrivs över, men länkar på webbplatsen fortsätter fungera.</div>
+            <input type="file" name="ReplaceFile" class="form-control mt-2" />
+        </div>
 
         <div class="mb-3">
             <label>Namn (Titel på bilden):</label>

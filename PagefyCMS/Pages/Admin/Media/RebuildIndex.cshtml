@@ -1,0 +1,28 @@
+@page
+@model PagefyCMS.Pages.Admin.Media.RebuildIndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Bygg om index";
+}
+
+<h2>Bygg om tillgångsindex</h2>
+
+<p>
+    Detta verktyg skannar igenom alla sidor och artiklar för att uppdatera indexet över vilka bilder som används var.
+    Använd detta om du misstänker att "Används i"-informationen inte stämmer.
+</p>
+
+@if (Model.IsDone)
+{
+    <div class="alert alert-success">
+        Indexering klar!
+    </div>
+}
+
+<form method="post">
+    <button type="submit" class="btn btn-primary">Starta ombyggnad av index</button>
+</form>
+
+<div class="mt-3">
+    <a href="/admin/media">Tillbaka till mediabiblioteket</a>
+</div>
