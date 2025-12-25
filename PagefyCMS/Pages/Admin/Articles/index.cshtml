@@ -25,8 +25,8 @@
         <td>@article.Slug</td>
         <td>@article.PublishedAt.ToString("yyyy-MM-dd")</td>
         <td>
-            <a class="btn btn-sm btn-warning" asp-page="./Edit" asp-route-id="@article.Id">Redigera</a>
-            <a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@article.Id">Ta bort</a>
+            <a class="btn btn-sm btn-warning" asp-page="./Edit" asp-route-id="@article.Id" aria-label="Redigera @article.Headline">Redigera</a>
+            <a class="btn btn-sm btn-danger" asp-page="./Delete" asp-route-id="@article.Id" aria-label="Ta bort @article.Headline">Ta bort</a>
         </td>
     </tr>
 }

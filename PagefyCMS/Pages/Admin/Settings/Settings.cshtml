@@ -61,6 +61,11 @@
                             <option value="aurora-gradient" selected="@(Model.ActiveTheme == "aurora-gradient" ? "selected" : null)">🌌 Aurora Gradient</option>
                         </select>
 
+                        <div id="themePreviewContainer" class="mb-3 text-center">
+                            <img id="themePreviewImage" src="" alt="Theme Preview" class="img-fluid border rounded shadow-sm" style="max-height: 200px; display: none;" />
+                            <p id="themePreviewText" class="text-muted mt-2" style="display: none;">No preview available</p>
+                        </div>
+
                         <div class="alert alert-info">
                             <i class="bi bi-info-circle"></i>
                             <small>
@@ -94,7 +99,34 @@
 
 <script>
 function updateThemePreview(theme) {
-    // You can later implement theme preview here
-    console.log('Theme selected: ' + theme);
+    const previewImage = document.getElementById('themePreviewImage');
+    const previewText = document.getElementById('themePreviewText');
+
+    // Map 'site' to 'framtidsdesign' as per directory structure
+    let themePath = theme;
+    if (theme === 'site') {
+        themePath = 'framtidsdesign';
+    }
+
+    // Construct the path to the preview image
+    const imagePath = `/themes/${themePath}/preview.jpg`;
+
+    // Update the image source
+    previewImage.src = imagePath;
+    previewImage.style.display = 'block';
+    previewText.style.display = 'none';
+
+    // Handle image load error
+    previewImage.onerror = function() {
+        previewImage.style.display = 'none';
+        previewText.style.display = 'block';
+        previewText.textContent = 'Preview not available for ' + theme;
+    };
 }
+
+// Initialize preview on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const activeTheme = document.getElementById('activeTheme').value;
+    updateThemePreview(activeTheme);
+});
 </script>

@@ -2,20 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
-using System.Text.RegularExpressions;
+using PagefyCMS.Services;
 
 namespace PagefyCMS.Pages.Admin.Articles
 {
     public class EditModel : PageModel
     {
         private readonly PagefyDbContext _context;
+        private readonly AssetUsageService _usageService;
 
         [BindProperty]
         public ArticlePage EditArticle { get; set; } = new ArticlePage();
 
-        public EditModel(PagefyDbContext context)
+        public EditModel(PagefyDbContext context, AssetUsageService usageService)
         {
             _context = context;
+            _usageService = usageService;
         }
 
         public IActionResult OnGet(int id)
@@ -41,23 +43,18 @@ namespace PagefyCMS.Pages.Admin.Articles
 
             if (string.IsNullOrWhiteSpace(EditArticle.Slug) && !string.IsNullOrWhiteSpace(EditArticle.Headline))
             {
-                EditArticle.Slug = GenerateSlug(EditArticle.Headline);
+                EditArticle.Slug = SlugHelper.GenerateSlug(EditArticle.Headline);
             }
+
+            EditArticle.UpdatedAt = DateTime.Now;
 
             _context.Articles.Update(EditArticle);
             _context.SaveChanges();
 
-            return RedirectToPage("./Index");
-        }
+            // Index content for asset usage
+            _usageService.IndexContentAsync(EditArticle.Id, "Article", EditArticle.Content, EditArticle.Headline).Wait();
 
-        private string GenerateSlug(string input)
-        {
-            string slug = input.ToLowerInvariant();
-            slug = Regex.Replace(slug, @"\s+", "-");
-            slug = Regex.Replace(slug, @"[^a-z0-9\-]", "");
-            slug = Regex.Replace(slug, @"\-+", "-");
-            slug = slug.Trim('-');
-            return slug;
+            return RedirectToPage("./Index");
         }
     }
 }

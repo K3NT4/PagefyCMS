@@ -1,0 +1,51 @@
+@page
+@model PagefyCMS.Pages.Admin.Media.DeleteModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Ta bort bild";
+}
+
+<h2>Ta bort bild</h2>
+
+@if (Model.Media != null)
+{
+    <div class="alert alert-warning">
+        <strong>Varning!</strong> Du är på väg att ta bort en bild. Detta kan inte ångras.
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <img src="@Model.Media.WebpMedium" alt="@Model.Media.AltText" style="max-width: 200px; border: 1px solid #ddd;" />
+        <div style="font-weight: bold; margin-top: 5px;">@Model.Media.Filename</div>
+    </div>
+
+    @if (Model.UsageList.Any())
+    {
+        <div class="alert alert-danger">
+            <strong>Bilden används på följande sidor:</strong>
+            <ul>
+                @foreach (var use in Model.UsageList)
+                {
+                    <li>@use</li>
+                }
+            </ul>
+            <p>Om du tar bort bilden kommer dessa sidor att visa en bruten länk.</p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success">
+            Inga referenser hittades. Det verkar säkert att ta bort bilden.
+        </div>
+    }
+
+    <form method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <a href="/admin/media" class="btn btn-secondary">Avbryt</a>
+        <button type="submit" class="btn btn-danger">Bekräfta borttagning</button>
+    </form>
+}
+else
+{
+    <p>Bilden kunde inte hittas.</p>
+    <a href="/admin/media" class="btn btn-primary">Tillbaka</a>
+}

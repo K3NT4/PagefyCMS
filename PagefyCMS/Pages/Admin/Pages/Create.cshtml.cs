@@ -2,20 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
-using System.Text.RegularExpressions;
+using PagefyCMS.Services;
 
 namespace PagefyCMS.Pages.Admin.Pages
 {
     public class CreateModel : PageModel
     {
         private readonly PagefyDbContext _context;
+        private readonly AssetUsageService _usageService;
 
         [BindProperty]
         public ContentPage NewPage { get; set; } = new ContentPage();
 
-        public CreateModel(PagefyDbContext context)
+        public CreateModel(PagefyDbContext context, AssetUsageService usageService)
         {
             _context = context;
+            _usageService = usageService;
         }
 
         public IActionResult OnGet()
@@ -38,10 +40,11 @@ namespace PagefyCMS.Pages.Admin.Pages
 
             if (string.IsNullOrWhiteSpace(NewPage.Slug) && !string.IsNullOrWhiteSpace(NewPage.Title))
             {
-                NewPage.Slug = GenerateSlug(NewPage.Title);
+                NewPage.Slug = SlugHelper.GenerateSlug(NewPage.Title);
             }
 
             NewPage.CreatedAt = DateTime.Now;
+            NewPage.UpdatedAt = DateTime.Now;
 
             if (string.IsNullOrWhiteSpace(NewPage.GalleryGroup))
             {
@@ -51,18 +54,10 @@ namespace PagefyCMS.Pages.Admin.Pages
             _context.Pages.Add(NewPage);
             _context.SaveChanges();
 
+            // Index content for asset usage
+            _usageService.IndexContentAsync(NewPage.Id, "Page", NewPage.Content, NewPage.Title).Wait();
+
             return RedirectToPage("./Index");
-        }
-
-
-        private string GenerateSlug(string input)
-        {
-            string slug = input.ToLowerInvariant();
-            slug = Regex.Replace(slug, @"\s+", "-");
-            slug = Regex.Replace(slug, @"[^a-z0-9\-]", "");
-            slug = Regex.Replace(slug, @"\-+", "-");
-            slug = slug.Trim('-');
-            return slug;
         }
     }
 }
