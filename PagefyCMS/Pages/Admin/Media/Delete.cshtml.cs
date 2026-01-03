@@ -45,7 +45,7 @@ namespace PagefyCMS.Pages.Admin.Media
                 .Where(u => u.AssetId == Media.Id)
                 .OrderByDescending(u => u.LastSeenAt)
                 .Take(limit + 1)
-                .Select(u => $"{u.ContentType == "Page" ? "Sida" : "Artikel"}: {u.ContentTitle}")
+                .Select(u => $"{(u.ContentType == "Page" ? "Sida" : "Artikel")}: {u.ContentTitle}")
                 .ToList();
 
             return Page();

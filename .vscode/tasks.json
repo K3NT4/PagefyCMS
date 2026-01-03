@@ -1,0 +1,66 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run PagefyCMS ASP.NET Core app",
+			"type": "shell",
+			"command": "dotnet run --project PagefyCMS/PagefyCMS.csproj",
+			"isBackground": false,
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Run PagefyCMS ASP.NET Core app",
+			"type": "shell",
+			"command": "dotnet run --project PagefyCMS/PagefyCMS.csproj",
+			"isBackground": false,
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Run PagefyCMS ASP.NET Core app",
+			"type": "shell",
+			"command": "dotnet run --project PagefyCMS/PagefyCMS.csproj",
+			"isBackground": false,
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Add migration for MetaDescription",
+			"type": "shell",
+			"command": "dotnet ef migrations add AddMetaDescriptionToPage --project PagefyCMS/PagefyCMS.csproj --startup-project PagefyCMS/PagefyCMS.csproj",
+			"isBackground": false,
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Install dotnet-ef tool",
+			"type": "shell",
+			"command": "dotnet tool install --global dotnet-ef",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Update dotnet tool and install dotnet-ef",
+			"type": "shell",
+			"command": "dotnet tool update --global dotnet-ef || dotnet tool install --global dotnet-ef",
+			"isBackground": false,
+			"group": "build"
+		},
+		{
+			"label": "Update dotnet-ef tool",
+			"type": "shell",
+			"command": "dotnet tool update --global dotnet-ef",
+			"isBackground": false,
+			"group": "build"
+		}
+	]
+}

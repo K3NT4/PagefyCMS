@@ -68,7 +68,7 @@ namespace PagefyCMS.Pages.Admin.Media
                 {
                     // Format strings for display
                     var list = mediaUsages
-                        .Select(u => $"{u.ContentType == "Page" ? "Sida" : "Artikel"}: {u.ContentTitle}")
+                        .Select(u => $"{(u.ContentType == "Page" ? "Sida" : "Artikel")}: {u.ContentTitle}")
                         .ToList();
                     MediaUsage[media.Id] = list;
                 }

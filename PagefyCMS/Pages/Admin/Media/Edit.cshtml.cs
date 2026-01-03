@@ -123,8 +123,6 @@ namespace PagefyCMS.Pages.Admin.Media
             }
 
             media.UploadedAt = DateTime.UtcNow; // Update timestamp
-            // media.Filename = file.FileName; // Optionally update original filename if we want to track the new name, but Slug remains same.
-            // Let's update Filename so admin sees the new name, but Slug (URL) is constant.
             media.Filename = file.FileName;
         }
     }
