@@ -82,6 +82,16 @@ namespace PagefyCMS.Migrations
                     b.Property<string>("GalleryGroup")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MetaDescription")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MetaTitle")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("ShowInMenu")
                         .HasColumnType("INTEGER");
 
@@ -91,6 +101,9 @@ namespace PagefyCMS.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

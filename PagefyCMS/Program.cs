@@ -46,6 +46,7 @@ await addonManager.InitializeAllAddonsAsync();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<PagefyDbContext>();
+    context.Database.Migrate();
     DbInitializer.EnsureAssetUsageTable(context);
 }
 
