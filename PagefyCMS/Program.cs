@@ -9,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<PagefyDbContext>(options =>
-    options.UseSqlite("Data Source=pagefy.db"));
+    options.UseSqlite("Data Source=pagefy.db")
+        .ConfigureWarnings(w => 
+            w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning)));
 
 builder.Services.AddHttpContextAccessor();
 
