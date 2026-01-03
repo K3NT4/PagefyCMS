@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PagefyCMS.Data;
 using PagefyCMS.Models;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace PagefyCMS.Pages.Admin.Media
 {
@@ -110,16 +112,25 @@ namespace PagefyCMS.Pages.Admin.Media
             var mediumPath = Path.Combine(uploadsPath, "webp", "medium", $"{baseName}.webp");
             var largePath = Path.Combine(uploadsPath, "webp", "large", $"{baseName}.webp");
 
-            using (var image = SixLabors.ImageSharp.Image.Load(originalPath))
+            using (var image = Image.Load(originalPath))
             {
-                image.Mutate(x => x.Resize(400, 0));
-                await image.SaveAsWebpAsync(smallPath);
+                // Small version (400px width)
+                using (var smallImage = image.Clone(x => x.Resize(400, 0)))
+                {
+                    await smallImage.SaveAsWebpAsync(smallPath);
+                }
 
-                image.Mutate(x => x.Resize(800, 0));
-                await image.SaveAsWebpAsync(mediumPath);
+                // Medium version (800px width)
+                using (var mediumImage = image.Clone(x => x.Resize(800, 0)))
+                {
+                    await mediumImage.SaveAsWebpAsync(mediumPath);
+                }
 
-                image.Mutate(x => x.Resize(1600, 0));
-                await image.SaveAsWebpAsync(largePath);
+                // Large version (1600px width)
+                using (var largeImage = image.Clone(x => x.Resize(1600, 0)))
+                {
+                    await largeImage.SaveAsWebpAsync(largePath);
+                }
             }
 
             media.UploadedAt = DateTime.UtcNow; // Update timestamp
