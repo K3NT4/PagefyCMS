@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PagefyCMS.Data;
 
@@ -10,9 +11,11 @@ using PagefyCMS.Data;
 namespace PagefyCMS.Migrations
 {
     [DbContext(typeof(PagefyDbContext))]
-    partial class PagefyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260103163550_AddMetaFieldsToPagesAndArticles")]
+    partial class AddMetaFieldsToPagesAndArticles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.11");

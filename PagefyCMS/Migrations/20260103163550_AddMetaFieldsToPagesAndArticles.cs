@@ -1,11 +1,11 @@
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace PagefyCMS.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMetaDescriptionToPage : Migration
+    public partial class AddMetaFieldsToPagesAndArticles : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,30 @@ namespace PagefyCMS.Migrations
                 table: "Pages",
                 type: "TEXT",
                 nullable: false,
-                defaultValue: new DateTime(2026, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc));
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<string>(
+                name: "MetaDescription",
+                table: "Articles",
+                type: "TEXT",
+                maxLength: 500,
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "MetaTitle",
+                table: "Articles",
+                type: "TEXT",
+                maxLength: 255,
+                nullable: false,
+                defaultValue: "");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "UpdatedAt",
+                table: "Articles",
+                type: "TEXT",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
         }
 
         /// <inheritdoc />
@@ -48,6 +71,18 @@ namespace PagefyCMS.Migrations
             migrationBuilder.DropColumn(
                 name: "UpdatedAt",
                 table: "Pages");
+
+            migrationBuilder.DropColumn(
+                name: "MetaDescription",
+                table: "Articles");
+
+            migrationBuilder.DropColumn(
+                name: "MetaTitle",
+                table: "Articles");
+
+            migrationBuilder.DropColumn(
+                name: "UpdatedAt",
+                table: "Articles");
         }
     }
 }
